@@ -1,49 +1,49 @@
-# 采购支出对账与供应商绩效分析 — 业务大纲
+# Procurement Spend Reconciliation & Supplier Performance — Analysis Plan
 
-## 1. 分析目标（业务驱动）
-某政府部门（加州 2012–2015 全州采购，真实公开数据）要回答：
-- **支出对账（spend reconciliation）**：34.6 万笔采购、总额 $1512 亿花到哪了——哪些部门、向哪些供应商、买什么、多少钱、怎么买的。
-- **集中度与风险**：支出是否过度集中在少数品类/供应商；豁免与灵活采购占多大比例，是否存在需复核的高风险支出。
-- **供应商管理**：供应商价值分层——哪些是战略核心、哪些可压价/换源。
-- **落地**：给出可执行的成本回收（高集中品类谈判、异常单价复核）与采购方式管控建议。
+## 1. Business Objectives (driven by the business)
+A public-sector buyer (California statewide procurement, 2012–2015, real public data) needs to answer:
+- **Spend reconciliation**: 346K purchases totaling $151B — where did it go: which departments, to which suppliers, for what, how much, and under which procurement method.
+- **Concentration & risk**: Is spend too concentrated in a few categories/suppliers? What share is exempt or flexible procurement, and are there high-risk lines to review?
+- **Supplier management**: Value-tier suppliers — which are strategic core, which can be negotiated down or re-sourced.
+- **Delivery**: Actionable cost-recovery (negotiate the concentrated categories, review anomalous unit prices) and procurement-control recommendations.
 
-## 2. 数据
-- 来源：`data/raw/`（加州政府采购公开数据，Kaggle `sohier/large-purchases-by-the-state-of-ca`）。
-- 字段含：部门、供应商、品类（UNSPSC segment）、采购方式、单价、数量、金额、日期等。
-- 时间：2012–2015。
-- 已知脏特征：日期脏字段、金额/单价异常值、供应商与品类分类缺失/不规范。
+## 2. Data
+- Source: `data/raw/` (California open procurement data; Kaggle `sohier/large-purchases-by-the-state-of-ca`).
+- Fields include: department, supplier, category (UNSPSC segment), procurement method, unit price, quantity, amount, date, etc.
+- Time: 2012–2015.
+- Known dirty features: messy date fields, amount/unit-price outliers, missing/inconsistent supplier and category codes.
 
-## 3. 清洗与预处理
-- 日期解析与脏字段修正；金额/数量负值与异常处理。
-- 新增：支出金额聚合（部门/品类/供应商/季度）、采购方式标志、供应商画像特征（采购额、笔数、集中度、单价水平）。
-- 单位统一；缺失值按口径显式处理（保留或剔除并注明）。
+## 3. Cleaning & Preprocessing
+- Parse dates and fix dirty date fields; handle negative/malformed amounts and quantities.
+- Derive: spend aggregates (by department/category/supplier/quarter), procurement-method flag, supplier profile features (spend, count, concentration, unit-price level).
+- Unify units; treat missing values explicitly (keep or drop, documented).
 
-## 4. 指标
-- 支出对账：总支出、按部门/品类（UNSPSC segment）/供应商分布与占比、集中度（前 N% 品类/供应商贡献）。
-- 采购方式：竞争 vs 豁免 vs 灵活支出占比与金额。
-- 供应商：采购额、笔数、单价均值、依赖度（单一供应商支出占比）。
-- 异常：单价离群比例与涉及金额（潜在多付）。
+## 4. Metrics
+- Spend reconciliation: total spend; distribution and share by department / category (UNSPSC segment) / supplier; concentration (top N% of categories/suppliers).
+- Procurement method: competitive vs exempt vs flexible spend (amount and share).
+- Supplier: spend, line count, average unit price, dependency (share of single-supplier spend).
+- Anomaly: outlier unit-price rate and related spend (potential overpayment).
 
-## 5. 建模（业务需要才用，讲原理/为什么/怎么用）
-- 目标 A（供应商价值分层）：用支出规模/稳定性/集中度特征做 **KMeans 聚类**，把供应商分成战略/普通/尾部等档，指导差异化谈判与风控——聚类因能发现无监督分组、且对分布假设要求低。
-- 目标 B（单价离群检测）：用 **MAD/分位数稳健阈值** 标记"同一品类下单价显著偏离"的采购，作为审计/追回线索——因金额长尾非正态，均值阈值不可靠，用稳健统计。
-- DL 判断：行数虽多但为表格/分类问题，无时序与高维结构，DL 收益有限、不可解释——不用 DL，说明理由。
-- 指标：聚类轮廓系数/组间差异；离群标记数与涉额；诚实声明样本与口径限制。
+## 5. Modeling (used only where the business needs it; explain principle/why/how)
+- Objective A (supplier value tiers): **KMeans clustering** on spend scale/stability/concentration features to split suppliers into strategic / regular / tail tiers, guiding differentiated negotiation and risk control — chosen because clustering finds unsupervised groups and has low distributional assumptions.
+- Objective B (unit-price outlier detection): **MAD / quantile robust thresholds** to flag purchases whose unit price deviates strongly within a category, as an audit / recovery cue — because amounts are heavy-tailed and non-normal, mean thresholds are unreliable; robust statistics are used.
+- DL judgment: rows are many but the task is tabular/classification with no sequence or high-dimensional structure; DL adds little and is hard to explain — DL is not used, with the reason stated.
+- Metrics: clustering silhouette / between-group differences; outlier count and related spend; honest limits on sample and definitions.
 
-## 6. 可视化（每图 Insight/Action）
-- 支出集中度（segment 占比，突出 healthcare 占 73.9%）。
-- 采购方式管控（竞争/豁免/灵活支出对比）。
-- 部门/品类支出分布；Top 供应商条形。
-- 供应商分层（KMeans 档位）。
-- 月度/季度支出趋势。
-- 单价离群复核清单（涉额 + 异常比）。
+## 6. Visualizations (each chart Insight + Action)
+- Spend concentration (segment share, highlighting healthcare at 73.9%).
+- Procurement-method control (competitive/exempt/flexible spend comparison).
+- Department/category spend distribution; top-supplier bars.
+- Supplier tiers (KMeans bands).
+- Monthly/quarterly spend trend.
+- Unit-price outlier review list (related spend + deviation ratio).
 
-## 7. 建议（落地）
-- 成本回收：高集中品类（healthcare）与重点供应商集中谈判；异常单价清单复核追回。
-- 方式管控：豁免/灵活采购占比高的环节补流程约束。
-- 供应商：分层运营——战略供应商维护、尾部供应商合并换源。
-- 下一步：逐笔 PO↔付款对账需银行流水，列为外部数据缺口。
+## 7. Recommendations (landing)
+- Cost recovery: negotiate the concentrated categories (healthcare) and key suppliers; review the outlier unit-price list for recovery.
+- Method control: add process constraints where exempt/flexible spend is high.
+- Suppliers: tiered operations — maintain strategic suppliers, consolidate/switch tail suppliers.
+- Next step: line-level PO↔payment reconciliation needs bank statements, listed as an external data gap.
 
-## 8. 交付
-- 中英双报告：`report/`（英 + 中各一份）+ 根目录 `index.html` / `index.zh-CN.html`。
-- 仓库：scripts/tests/data(raw/output) + README + requirements；data/raw 与 parquet 不入 git；本地 git 小步提交。
+## 8. Deliverables
+- Bilingual reports: `report/` (EN + ZH each) plus root `index.html` / `index.zh-CN.html`.
+- Repo: scripts/tests/data(raw/output) + README + requirements; data/raw and parquet excluded from git; local git committed in small steps.
