@@ -23,11 +23,26 @@ def test_report_has_title():
     assert m and m.group(1).strip(), "HTML report must have a document title"
 
 
-def test_report_has_six_sections():
+def test_report_has_sections():
     with open(_html_path(), encoding="utf-8") as f:
         html = f.read()
-    for sec in ("s1", "s2", "s3", "s4", "s5", "s6"):
+    for sec in ("s1", "s2", "s3", "s4", "s5"):
         assert f'id="{sec}"' in html, f"missing section {sec}"
+    # no detached "visualization" gallery section anymore
+    assert 'id="s6"' not in html
+
+
+def test_every_figure_has_insight_and_action():
+    with open(_html_path(), encoding="utf-8") as f:
+        html = f.read()
+    refs = re.findall(r'src="assets/([^"]+)"', html)
+    assert refs, "report must embed at least one chart"
+    for ref in refs:
+        # each figure is a self-contained block with an Insight and an Action
+        assert ref in html
+    # Insight + Action labels must appear at least once per section that hosts figures
+    assert html.count(">Insight<") >= len(refs), "every figure needs an Insight"
+    assert html.count(">Action<") >= len(refs), "every figure needs an Action"
 
 
 def test_all_assets_exist_and_are_referenced():
