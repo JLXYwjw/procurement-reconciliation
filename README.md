@@ -42,3 +42,21 @@ python -m pytest tests -q         # unit + report + output contract tests
 2. Document exempt spend in the core + sample-review the flexible $6.36B.
 3. Manage the ~42% **private** recurring-core suppliers as strategic accounts; govern the public bodies.
 4. Build a SKU / market-price **baseline** before any unit-price verdict.
+
+## Data source
+
+The raw extract lives in `data/raw/` (excluded from git — clone this repo, then download the data yourself).
+
+| File | What it is | Kaggle download |
+|---|---|---|
+| `PURCHASE ORDER DATA EXTRACT 2012-2015_0.csv` | CA statewide purchase-order extract, ~346k records, 2012–2015 | `kaggle datasets download -d sohier/large-purchases-by-the-state-of-ca -p data/raw --unzip` |
+
+- **Kaggle page:** https://www.kaggle.com/datasets/sohier/large-purchases-by-the-state-of-ca
+- **Official source:** California Open Data Portal (`data.ca.gov`) statewide procurement / purchase-order export.
+- Honest note: the file here is the official CA PO extract; the Kaggle mirror (`sohier/large-purchases`) covers the same CA procurement domain — exact column coverage may differ.
+
+```bash
+pip install kaggle
+kaggle datasets download -d sohier/large-purchases-by-the-state-of-ca -p data/raw --unzip
+# requires a kaggle.json / KAGGLE_USERNAME + KAGGLE_KEY
+```
