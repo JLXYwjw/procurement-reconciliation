@@ -47,10 +47,11 @@ fig, ax = plt.subplots(figsize=(10.5, 4.2))
 ax.plot(mt.index, mt.values, marker="o", ms=3.5, lw=1.6, color=BLUE)
 ax.fill_between(mt.index, mt.values, color=BLUE, alpha=0.10)
 peak = mt.idxmax()
-ax.annotate(f"peak {mt.max():.0f}B\n{peak:%Y-%m}",
+ax.annotate(f"{mt.max():.0f}B\n{peak:%Y-%m}\ngiant med-settlement month",
             xy=(peak, mt.max()), xytext=(peak, mt.max() * 1.02),
             ha="center", fontsize=9, color=RED)
-ax.set_title("Monthly Procurement Spend ($B)", fontsize=12, fontweight="bold")
+ax.set_title("Monthly Spend ($B) — lumpy, dominated by a few giant payments",
+             fontsize=11, fontweight="bold")
 ax.set_ylabel("Spend ($B)")
 ax.grid(alpha=0.3, lw=0.5)
 _save(fig, "monthly_trend.png")
