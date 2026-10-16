@@ -36,9 +36,9 @@
 
 ## 五、报告预览与关键图表
 
-![医疗支出集中度](assets/healthcare_concentration.png)
-![头部供应商](assets/top10_suppliers.png)
-![采购方式管控](assets/method_control.png)
+![医疗支出集中度](assets/healthcare_concentration_zh.png)
+![头部供应商](assets/top10_suppliers_zh.png)
+![采购方式管控](assets/method_control_zh.png)
 
 > 完整交互版报告：`index.html`（业务目标 → 清洗 → 指标 → 建模 → 建议，每个图表都带 Insight + Action）。GitHub 不渲染仓库内 HTML，请 clone 后本地打开。
 
