@@ -169,24 +169,11 @@ ax.pie([hc, rest], labels=["Health Care Services", "All other departments"],
 ax.set_title("Health Care Services = 66.0% of total spend", fontsize=12, fontweight="bold")
 _save(fig, "healthcare_concentration.png")
 
-# --- 8) Unit-cost outliers: they are large but legitimate buys --------------
-gg = pd.read_parquet(os.path.join(OUT_DIR, "goods_anomaly.parquet"))
-gg["unit_cost"] = gg["total_price"] / gg["quantity"]
-fig, ax = plt.subplots(figsize=(9, 4.2))
-norm = gg[~gg["goods_outlier"]]
-out = gg[gg["goods_outlier"]]
-ax.scatter(norm["quantity"], norm["unit_cost"], s=4, alpha=0.25, color=BLUE,
-           label=f"normal ({len(norm):,})")
-ax.scatter(out["quantity"], out["unit_cost"], s=6, alpha=0.6, color=RED,
-           label=f"flagged ({len(out):,})")
-ax.set_xscale("log")
-ax.set_yscale("log")
-ax.set_xlabel("Quantity (log)")
-ax.set_ylabel("Unit cost $ (log)")
-ax.set_title("Unit-cost Outliers — mostly large but legitimate vehicle/medical buys",
-             fontsize=11, fontweight="bold")
-ax.legend(fontsize=8)
-ax.grid(alpha=0.3, lw=0.4)
-_save(fig, "unit_cost_outliers.png")
+# --- 8) unit-cost outlier chart REMOVED -------------------------------------
+# Outlier detection was evaluated and dropped from the report: with only the
+# 2-digit UNSPSC segment available, goods are mixed at too coarse a grain, so
+# the MAD-based flag rate (~26%) is methodologically unreliable (a healthy
+# MAD-3 rate is <1%). Kept goods_anomaly.parquet as reproducible evidence;
+# the report states this explicitly instead of showing a misleading chart.
 
 print("DONE")

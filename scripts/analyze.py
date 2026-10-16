@@ -18,6 +18,12 @@ print("UNIQUE_SUPPLIER", int(df["supplier_name"].nunique()))
 g = df.groupby("supplier_name")["total_price"].sum().sort_values(ascending=False)
 grand = float(df["total_price"].sum())
 print("TOP10_SHARE", round(float(g.head(10).sum()) / grand, 4))
+# Concentration: CR4 / CR8 are more legible than HHI for a payee-concentration
+# story; HHI is kept as a secondary note.
+cr4 = float(g.head(4).sum()) / grand
+cr8 = float(g.head(8).sum()) / grand
+print("CR4", round(cr4, 4))
+print("CR8", round(cr8, 4))
 share = g / g.sum()
 print("HHI", round(float((share ** 2).sum()), 5))
 print("TOP10_SUPPLIERS")

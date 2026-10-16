@@ -53,9 +53,9 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker" style="color:#e0f2fe">Data Analysis Project · Public Procurement</div>
+    <div class="kicker" style="color:#e0f2fe">Data Analysis Project · Public Procurement &amp; Payment Reconciliation</div>
     <h1>California State Procurement: Spend, Concentration &amp; Control</h1>
-    <p class="sub">A 346k-record analysis of state purchase orders to find where money concentrates, which buys are uncontrolled, and what to do about it — turning raw procurement data into an actionable cost &amp; compliance plan.</p>
+    <p class="sub">A 346k-record analysis of state purchase orders to find where money concentrates, which payments carry reconciliation &amp; control risk, and what to do about it — turning raw procurement data into an actionable cost &amp; compliance plan.</p>
     <div class="meta">Source: CA Department of General Services purchase-order extract (FY 2012–2015) · 346,018 order lines · $151.2B total spend</div>
   </div>
 </header>
@@ -75,13 +75,13 @@
 <section id="s1">
   <div class="kicker">Part 1 · Business Objective</div>
   <h2><span class="n">1.</span> Why this analysis</h2>
-  <p>The State of California runs procurement for <strong>200,533 purchase orders</strong> across <strong>24,732 suppliers</strong>. Procurement teams routinely cannot see three things that drive cost and risk:</p>
+  <p>The State of California runs procurement for <strong>200,533 purchase orders</strong> across <strong>24,732 suppliers</strong>. Procurement &amp; finance teams routinely cannot see three things that drive cost and risk:</p>
   <ul>
-    <li><strong>Where money concentrates</strong> — a few suppliers or departments swallowing most spend.</li>
-    <li><strong>Which buys are uncontrolled</strong> — purchases routed through non-standard ("flexible") methods that deserve review.</li>
-    <li><strong>Where unit prices look off</strong> — anomalies that may signal overpricing or data-entry errors.</li>
+    <li><strong>Where money concentrates</strong> — a few healthcare-payer organizations swallowing most spend, which is where payment-reconciliation risk lives.</li>
+    <li><strong>Which payments are uncontrolled</strong> — spend routed through exempt or flexible ("non-standard") methods that deserve governance review.</li>
+    <li><strong>One-off vs recurring relationships</strong> — giant one-time settlements vs steady strategic partners, which need different controls.</li>
   </ul>
-  <p><strong>One-sentence goal:</strong> identify the small number of high-impact levers (concentration, control, and reviewable purchases) that let procurement negotiate better, set controls, and protect taxpayer money.</p>
+  <p><strong>One-sentence goal:</strong> identify the small number of high-impact levers — payment reconciliation for the giant healthcare payees, control review of non-standard methods, and strategic-supplier management — that protect taxpayer money.</p>
 </section>
 
 <section id="s2">
@@ -92,7 +92,7 @@
     <tr><th>Issue</th><th>Treatment</th><th>Impact</th></tr>
     <tr><td>Physical vs logical rows</td><td>Read full rows; multi-line text fields belong to one record</td><td>909k lines → 346,018 clean records, 0 rows lost</td></tr>
     <tr><td>Money as <code>$1,234.56</code> strings</td><td>Strip <code>$</code>/commas, parse to float</td><td>Unit &amp; total price usable for math</td></tr>
-    <tr><td>Dates as <code>MM/DD/YYYY</code> text</td><td>Parse to datetime, derive month/fiscal-year</td><td>Time trends + FY year-end peaks visible</td></tr>
+    <tr><td>Dates as <code>MM/DD/YYYY</code> text</td><td>Parse to datetime, derive month/fiscal-year</td><td>Time trends + lumpy giant-payment months visible</td></tr>
     <tr><td>Location dirty field <code>"ZIP\n(lat,lon)"</code></td><td>Keep only 5-digit ZIP</td><td>262,270 lines with clean ZIP</td></tr>
     <tr><td>UNSPSC code</td><td>Keep first 2 digits as product segment</td><td>Category roll-ups possible</td></tr>
     <tr><td>Acquisition method</td><td>Map to control class: competitive / exempt / flexible</td><td>Identifies uncontrolled spend</td></tr>
@@ -107,26 +107,28 @@
     <div class="card"><div class="num">$151.2B</div><div class="lbl">Total procurement spend</div></div>
     <div class="card"><div class="num">200,533</div><div class="lbl">Purchase orders</div></div>
     <div class="card"><div class="num">24,732</div><div class="lbl">Suppliers</div></div>
+    <div class="card"><div class="num">26.5%</div><div class="lbl">CR4 — top-4 payees</div></div>
+    <div class="card"><div class="num">37.4%</div><div class="lbl">CR8 — top-8 payees</div></div>
     <div class="card"><div class="num">41.4%</div><div class="lbl">Top-10 supplier share</div></div>
-    <div class="card"><div class="num">0.0265</div><div class="lbl">HHI (low concentration)</div></div>
   </div>
 
   <h3>Metric definitions</h3>
   <table>
     <tr><th>Metric</th><th>Formula / definition</th><th>Why it matters</th></tr>
     <tr><td>Total spend</td><td>Σ total_price over all lines</td><td>Scale of the program</td></tr>
-    <tr><td>Top-10 share</td><td>Σ top-10 suppliers ÷ total</td><td>How concentrated purchasing is</td></tr>
-    <tr><td>HHI</td><td>Σ (supplier_share)²</td><td>Standard concentration index (0–1)</td></tr>
-    <tr><td>Method control class</td><td>competitive / exempt / flexible</td><td>Share of spend outside standard channels</td></tr>
+    <tr><td>CR4 / CR8</td><td>Σ spend of top-4 / top-8 payees ÷ total</td><td>Concentration among the biggest payees (the reconciliation target set)</td></tr>
+    <tr><td>Top-10 share</td><td>Σ top-10 suppliers ÷ total</td><td>How concentrated purchasing is overall</td></tr>
+    <tr><td>HHI</td><td>Σ (supplier_share)² (secondary)</td><td>Standard concentration index (0–1), kept as a note</td></tr>
+    <tr><td>Method control class</td><td>competitive / exempt / flexible</td><td>Share of spend by procurement channel</td></tr>
+    <tr><td>Exempt-method spend</td><td>Σ spend routed as legally exempt</td><td>40.1% of spend — legitimate but needs governance review, not "maverick buying"</td></tr>
     <tr><td>Flexible-method spend</td><td>Σ spend on SOQ, NCB, Emergency, etc.</td><td>Reviewable / higher-risk purchasing</td></tr>
-    <tr><td>Unit-cost anomaly</td><td>MAD-based deviation from segment median</td><td>Lines whose unit price is far from peers</td></tr>
   </table>
 
   <div class="fig">
     <img src="assets/monthly_trend.png" alt="Monthly spend trend">
     <div class="why">
       <div class="tag so">Insight</div>
-      <p>Spend is <strong>lumpy, not steady</strong>: a handful of giant medical-settlement months dominate (Mar 2013 = <strong>$23B</strong>, driven by a single <strong>$11B payment to one health plan</strong>; Apr/Jun 2014-15 spike too). Most months sit under ~$4B.</p>
+      <p>Spend is <strong>lumpy, not steady</strong>: a handful of giant payment months dominate (Mar 2013 = <strong>$23B</strong>, driven by a single <strong>$11B payment to one health plan</strong>; Apr/Jun 2014-15 spike too). Most months sit under ~$4B.</p>
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
@@ -142,7 +144,7 @@
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
-      <p>Stand up a dedicated healthcare-payer procurement program: with two-thirds of spend in one place, even a 1% improvement here outweighs anything else by far.</p>
+      <p>Stand up a dedicated <strong>healthcare-payer payment program</strong>: with two-thirds of spend here, a dedicated reconciliation &amp; rate-audit team pays for itself many times over.</p>
     </div>
   </div>
 
@@ -150,11 +152,11 @@
     <img src="assets/top10_suppliers.png" alt="Top 10 suppliers">
     <div class="why">
       <div class="tag so">Insight</div>
-      <p>The top-10 suppliers are <strong>41.4% of all spend and every one is a healthcare-payer organization</strong> (Health Net, L.A. Care, Delta Dental, Blue Cross, IEHP, Molina…). Money is concentrated, not fragmented.</p>
+      <p>The top-10 payees are <strong>41.4% of all spend and every one is a healthcare-payer organization</strong> (Health Net, L.A. Care, Delta Dental, Blue Cross, IEHP, Molina…). Money is concentrated among <em>payment recipients</em>, not goods vendors.</p>
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
-      <p>Run consolidated negotiations / volume rebates with these 10. A 2–3% price bring-down on this tier is <strong>~$1.0–1.6B</strong> of annual leverage.</p>
+      <p>Treat these as a <strong>payment-reconciliation cohort</strong>: reconcile claims vs invoices vs POs, audit rate agreements &amp; settlement timing, and track un-reversed rebates/return accruals — not a goods-negotiation target.</p>
     </div>
   </div>
 
@@ -178,7 +180,7 @@
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
-      <p>Build a category benchmark-price baseline for segment 85 so an above-market unit price becomes immediately visible at contract time.</p>
+      <p>Build a category benchmark baseline for segment 85 so an above-market unit price becomes visible at contract time; pair it with payment-level checks (rate vs agreement).</p>
     </div>
   </div>
 </section>
@@ -188,58 +190,45 @@
   <h2><span class="n">4.</span> Business-driven methods (principle · why · how)</h2>
 
   <h3>4.1 Supplier segmentation with KMeans clustering</h3>
-  <p><strong>Principle.</strong> KMeans groups suppliers so those inside a cluster are similar and clusters differ, using 5 scaled features: total spend, order count, category breadth, max-line share, average line value.</p>
-  <p><strong>Why (business-driven).</strong> Negotiation effort is scarce; the question is <em>"which suppliers deserve a strategic relationship?"</em> A spend threshold alone would miss one-off giants vs. steady core vendors.</p>
-  <p><strong>How.</strong> StandardScaler → <code>k=3</code> (core / regular / one-off) → <code>n_init=10</code> for stability, seed fixed.</p>
+  <p><strong>Principle.</strong> KMeans groups suppliers so those inside a cluster are similar and clusters differ, using scaled features of <em>scale × stickiness</em>: total spend, avg order, order count, order frequency, and years active (log/standardised).</p>
+  <p><strong>Why (business-driven).</strong> A spend ranking alone is misleading: it cannot tell a <em>one-off giant settlement</em> from a <em>steady multi-year strategic partner</em> — two groups that need completely different controls. Clustering separates them.</p>
+  <p><strong>How.</strong> StandardScaler → business-chosen <code>k=4</code> (silhouette favours 2, but that is one big blob, not resolvable) → <code>n_init=10</code>, seed fixed. The recurring core cluster is then verified against a naive top-N cut.</p>
   <table>
-    <tr><th>Tier</th><th>Suppliers</th><th>Spend</th><th>Share</th><th>Action</th></tr>
-    <tr><td>Core (strategic)</td><td>8</td><td>$53.5B</td><td>35.4%</td><td>Negotiate consolidated contracts</td></tr>
-    <tr><td>Regular</td><td>10,666</td><td>$84.3B</td><td>55.7%</td><td>Policy + catalog compliance</td></tr>
-    <tr><td>One-off</td><td>14,058</td><td>$13.4B</td><td>8.9%</td><td>Consolidate; watch tail</td></tr>
+    <tr><th>Tier</th><th>Suppliers</th><th>Spend</th><th>Share</th><th>Character</th></tr>
+    <tr><td>Core (recurring)</td><td>1,921</td><td>$45.6B</td><td>30.1%</td><td>Multi-year, high-frequency partners — strategic-relationship targets</td></tr>
+    <tr><td>One-off / large</td><td>4,583</td><td>$104.1B</td><td>68.8%</td><td>Single / low-frequency big payments — reconciliation &amp; rate-audit cohort</td></tr>
+    <tr><td>Regular</td><td>6,917</td><td>$1.36B</td><td>0.9%</td><td>Mid-size, occasional</td></tr>
+    <tr><td>Tail</td><td>11,311</td><td>$0.17B</td><td>0.1%</td><td>Small, one-off</td></tr>
   </table>
   <div class="fig">
     <img src="assets/supplier_tier.png" alt="Supplier segmentation">
     <div class="why">
       <div class="tag so">Insight</div>
-      <p>KMeans isolates <strong>8 core suppliers = 35.4% of spend</strong> (all healthcare-payer orgs), a <strong>regular</strong> middle and a long <strong>one-off</strong> tail of 14k small vendors.</p>
+      <p>KMeans on scale × stickiness separates <strong>68.8% of spend that is one-off/large</strong> (single-year, low-frequency big settlements) from a <strong>30.1% recurring core</strong> of 1,921 multi-year partners — a split a spend ranking cannot produce. Core overlaps top-20 spenders by only 6 names.</p>
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
-      <p>Put the 8 core vendors on a managed strategic-account program and consolidate one-off tail buys into fewer contracts to capture volume discounts.</p>
+      <p>Route the <strong>one-off/large tier to a payment-reconciliation workstream</strong> (claims vs invoice vs PO, settlement timing, rate vs agreement); reserve relationship management for the recurring core — they are where long-term leverage lives.</p>
     </div>
   </div>
 
-  <h3>4.2 Unit-cost anomaly detection (MAD rule, goods only)</h3>
-  <p><strong>Principle.</strong> The Median Absolute Deviation measures spread around the median robustly (unlike mean ± σ it is not distorted by the outliers it hunts); a line flags when unit cost &gt;3×MAD above its segment median.</p>
-  <p><strong>Why.</strong> A first pass on <em>total spend</em> flagged huge but legitimate medical contracts (83% of spend) — indefensible. We restrict to goods with quantity ≥ 2 (comparable unit prices) and compare within a product segment.</p>
-  <p><strong>How &amp; honest caveat.</strong> 32,433 of 124,290 comparable goods lines flag, ~$731.7M — but the top flags are legitimate big buys (helicopters, police interceptors, fire apparatus). <strong>Conclusion:</strong> without a SKU-level / market-price baseline, these flags are a <em>review queue, not a verdict</em>.</p>
-  <div class="fig">
-    <img src="assets/unit_cost_outliers.png" alt="Unit cost outliers">
-    <div class="why">
-      <div class="tag so">Insight</div>
-      <p>The flagged "outliers" cluster at high quantity &amp; high unit cost — large but legitimate vehicle/medical purchases. Statistical flags alone mislead here.</p>
-    </div>
-    <div class="why">
-      <div class="tag rec">Action</div>
-      <p>Use this as a weekly human-review queue; add a like-for-like (SKU-level or market-price) baseline later to turn it into a true overpricing detector.</p>
-    </div>
-  </div>
-
-  <h3>4.3 Control-class review list (business rule)</h3>
-  <p>Purchases via flexible / non-standard methods are grouped into a <strong>process-review list</strong>: <strong>$6.36B</strong> across 76,129 lines (Statement of Qualifications $1.73B, NCB $1.30B, State Programs $0.95B, Emergency $0.59B, Fair &amp; Reasonable $0.42B, …). Not presumed bad — the subset a reviewer should sample for compliance.</p>
+  <h3>4.2 Method control &amp; the exempt channel</h3>
+  <p><strong>Principle.</strong> Each order is mapped to a control class — <code>competitive</code> (open competition), <code>exempt</code> (legally exempt from competition), or <code>flexible</code> (non-standard but reviewable methods such as Statement of Qualifications, Non-Competitive, Emergency).</p>
+  <p><strong>Why.</strong> Control is the second lever after concentration: uncontrolled spend is where both fraud risk and missed savings hide.</p>
+  <p><strong>How &amp; honest framing.</strong> Spend splits <strong>55.7% competitive / 40.1% exempt / 4.2% flexible</strong>. The exempt 40.1% (~$60.6B) is <em>not "maverick buying"</em> — much is a legal channel (healthcare payments, statutory exemptions, single-source) — but at 40% it warrants a documented rationale + sampling, not silent acceptance.</p>
   <div class="fig">
     <img src="assets/method_control.png" alt="Method control">
     <div class="why">
       <div class="tag so">Insight</div>
-      <p>Competitive and legally-exempt methods carry most spend, but <strong>$6.36B flows through flexible methods</strong> that deserve process review.</p>
+      <p>Competitive and legally-exempt methods carry most spend; <strong>$6.36B still flows through flexible methods</strong> that deserve process review, and the exempt share (40.1%) needs a documented basis.</p>
     </div>
     <div class="why">
       <div class="tag rec">Action</div>
-      <p>Sample-review the top-200 flexible-method purchases by spend; set a "spend under management" target to pull more buying into controlled channels.</p>
+      <p>Sample-review the top flexible-method purchases and <strong>attach a documented exemption rationale to each exempt payment</strong>; set a "spend under management" target to pull more buying into controlled channels.</p>
     </div>
   </div>
 
-  <div class="callout"><strong>Why no deep learning here.</strong> This is tabular, ~346k rows, unlabeled. ML clustering + robust statistics answer the questions; DL needs far larger / sequence-shaped data and adds no gain for a compliance story that must stay explainable to stakeholders.</div>
+  <div class="callout"><strong>Methodology notes.</strong> (1) A unit-cost anomaly screen was evaluated (MAD vs segment median) and <strong>dropped</strong>: with only the 2-digit UNSPSC segment, goods are mixed at too coarse a grain, so the ~26% flag rate is methodologically unreliable (a healthy MAD-3 rate is &lt;1%). It is kept only as reproducible evidence that a like-for-like (SKU/market-price) baseline is required before outlier verdicts. (2) <strong>No deep learning here.</strong> This is tabular, ~346k rows, unlabeled; ML clustering + robust statistics answer the questions, while DL needs far larger / sequence-shaped data and adds no explainability for a compliance story.</div>
 </section>
 
 <section id="s5">
@@ -248,32 +237,32 @@
   <div class="grid two">
     <div class="card">
       <span class="pill">High impact</span>
-      <h3 style="margin-top:6px">1 · Consolidate the 8 core vendors</h3>
-      <p>35.4% of spend sits with 8 healthcare-payer suppliers. Consolidated contracts + volume rebates; a 2–3% bring-down = <strong>$1.0–1.6B</strong> annual leverage.</p>
+      <h3 style="margin-top:6px">1 · Stand up a healthcare-payment reconciliation workstream</h3>
+      <p>68.8% of spend is one-off/large, concentrated in 41.4% top healthcare-payer payees. Reconcile claims vs invoices vs POs, audit rate agreements &amp; settlement timing, and track un-reversed rebates — that is the real money lever.</p>
     </div>
     <div class="card">
       <span class="pill">High impact</span>
-      <h3 style="margin-top:6px">2 · Review the $6.36B flexible-method spend</h3>
-      <p>Sample the top flexible buys for compliance; flexible methods are legitimate but higher-risk. Catch off-contract drift without choking operations.</p>
-    </div>
-    <div class="card">
-      <span class="pill">Control</span>
-      <h3 style="margin-top:6px">3 · Set a managed-spend target + tame year-end spikes</h3>
-      <p>Raise spend through competitive/framework channels; smooth the fiscal-year-end buying spikes with a monthly spend-target KPI.</p>
+      <h3 style="margin-top:6px">2 · Attach a documented rationale to exempt + review flexible spend</h3>
+      <p>40.1% of spend is legally exempt and $6.36B is flexible. Sample the top flexible buys and document the basis for each exempt payment, so control is provable rather than assumed.</p>
     </div>
     <div class="card">
       <span class="pill">Governance</span>
-      <h3 style="margin-top:6px">4 · Stand up a unit-price review queue</h3>
-      <p>Keep the flagged goods list as a weekly human-review queue; add a SKU/market-price baseline to make it a real overpricing detector.</p>
+      <h3 style="margin-top:6px">3 · Manage the recurring-core relationships deliberately</h3>
+      <p>The 1,921 core suppliers (30.1% of spend, multi-year) deserve strategic-account management; the one-off tier goes to the reconciliation queue instead of a negotiation table.</p>
+    </div>
+    <div class="card">
+      <span class="pill">Baseline</span>
+      <h3 style="margin-top:6px">4 · Build a benchmark baseline before any price verdict</h3>
+      <p>Add a SKU-level / market-price baseline for segment 85 so a future unit-price screen is a true overpricing detector, not a misleading flag queue.</p>
     </div>
   </div>
-  <p class="muted">Deliverables in repo: cleaned table (<code>output/procurement_clean.parquet</code>), anomaly / flexible / segmentation outputs, charts (<code>assets/</code>), and this report.</p>
+  <p class="muted">Deliverables in repo: cleaned table (<code>output/procurement_clean.parquet</code>), flexible / anomaly / segmentation outputs, charts (<code>assets/</code>), and this report.</p>
 </section>
 
 </div>
 
 <footer>
-  <div class="wrap">Prepared from California DGS procurement data (FY2012–2015). Analysis scripts: <code>clean_data.py</code>, <code>analyze.py</code>, <code>analyze_extended.py</code>, <code>ml_analysis.py</code>, <code>generate_charts.py</code>.</div>
+  <div class="wrap">Prepared from California DGS procurement data (FY2012–2015). Analysis scripts: <code>clean_data.py</code>, <code>analyze.py</code>, <code>analyze_extended.py</code>, <code>ml_analysis.py</code>, <code>supplier_cluster.py</code>, <code>generate_charts.py</code>.</div>
 </footer>
 
 </body>
