@@ -19,12 +19,13 @@ OUT_DIR = os.path.join(ROOT, "output")
 ASSET_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ASSET_DIR, exist_ok=True)
 
-BLUE = "#2563eb"
-NAVY = "#1e3a8a"
-ORANGE = "#f59e0b"
-GREEN = "#10b981"
-RED = "#ef4444"
-GREY = "#9ca3af"
+BLUE = "#2e6f8e"    # steel blue (primary data color)
+NAVY = "#16324a"    # deep navy (emphasis)
+ORANGE = "#b45309"  # burnt amber (highlight)
+GREEN = "#3f6212"   # muted olive (positive / competitive)
+RED = "#b91c1c"     # muted red (flag / alert)
+GREY = "#6b7280"    # neutral grey
+LIGHT = "#cbd5e1"   # light steel (secondary)
 
 
 def _save(fig, name):
@@ -88,17 +89,25 @@ for i, s in enumerate(dep_share.values[::-1]):
 ax.grid(axis="x", alpha=0.3, lw=0.5)
 _save(fig, "department.png")
 
-# --- 4) UNSPSC segment ------------------------------------------------------
-u = df.copy()
-seg = u.groupby("segment")["total_price"].sum().sort_values(ascending=False).head(8)
-seg_share = seg / seg.sum()
-fig, ax = plt.subplots(figsize=(8, 4))
-ax.pie(seg_share.values, labels=seg.index, autopct="%1.0f%%",
-       colors=[NAVY, BLUE, "#60a5fa", "#93c5fd", "#bfdbfe", "#dbeafe",
-               ORANGE, GREY],
-       startangle=90, textprops={"fontsize": 9})
-ax.set_title("Top UNSPSC Segments — segment 85 (Healthcare) alone = 73.9% of spend",
+# --- 4) UNSPSC segment (horizontal bars, unambiguous labels) ----------------
+seg = df.groupby("segment")["total_price"].sum().sort_values(ascending=False).head(8)
+seg_share = seg / grand
+fig, ax = plt.subplots(figsize=(8.5, 4.4))
+labels = seg.index[::-1]
+vals = seg.values[::-1] / 1e9
+shares = seg_share.values[::-1]
+colors = [ORANGE if l == "85" else GREY for l in labels]
+ax.barh(range(len(labels)), vals, color=colors)
+ax.set_yticks(range(len(labels)))
+ax.set_yticklabels([f"Segment {l}" for l in labels], fontsize=10)
+for i, (v, s) in enumerate(zip(vals, shares)):
+    hi = labels[i] == "85"
+    ax.text(v + 0.5, i, f"${v:.1f}B · {s*100:.1f}%", va="center", fontsize=9,
+            color=NAVY if hi else GREY, fontweight="bold" if hi else "normal")
+ax.set_title("Top UNSPSC Segments by Spend ($B) — segment 85 (healthcare) = 73.9%",
              fontsize=11, fontweight="bold")
+ax.set_xlabel("Spend ($B)")
+ax.grid(axis="x", alpha=0.3, lw=0.5)
 _save(fig, "category_segment.png")
 
 # --- 5) Acquisition-method control class (competitive / exempt / flexible) --
@@ -125,7 +134,7 @@ tier["spend"] = tier["spend"] / 1e9
 fig, ax = plt.subplots(figsize=(8.5, 4.4))
 order = tier.index.tolist()
 labels = {"core": "Core (strategic)", "regular": "Regular", "oneoff": "One-off"}
-colors = {"core": NAVY, "regular": BLUE, "oneoff": "#93c5fd"}
+colors = {"core": NAVY, "regular": BLUE, "oneoff": LIGHT}
 for i, t in enumerate(order):
     ax.barh(order[::-1][i], tier["spend"][order[::-1][i]], color=colors[order[::-1][i]])
 labels_y = [labels[o] for o in order[::-1]]
