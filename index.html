@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>California State Procurement — Spend, Concentration &amp; Control Analysis</title>
+<style>
+  :root{--navy:#1e3a8a;--blue:#2563eb;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--bg:#f9fafb;--card:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:56px 24px 44px;margin-bottom:8px}
+  header.hero h1{margin:0 0 10px;font-size:30px;line-height:1.2}
+  header.hero .sub{opacity:.92;font-size:16px;max-width:820px}
+  header.hero .meta{margin-top:18px;font-size:13px;opacity:.85}
+  nav.tabs{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5;padding:10px 24px}
+  nav.tabs .wrap{padding:0;display:flex;gap:6px;flex-wrap:wrap;max-width:1080px}
+  nav.tabs a{color:var(--blue);text-decoration:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px}
+  nav.tabs a:hover{background:#eff6ff}
+  section{padding:36px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:22px;color:var(--navy);margin:0 0 6px}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+  h3{font-size:16px;margin:22px 0 6px}
+  p,li{font-size:14.5px}
+  .muted{color:var(--muted)}
+  .grid{display:grid;gap:16px}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:18px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .card .num{font-size:26px;font-weight:800;color:var(--navy)}
+  .card .lbl{font-size:13px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6;font-weight:700}
+  .fig{margin:20px 0;text-align:center}
+  .fig img{max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .fig .cap{font-size:13px;color:var(--muted);margin-top:6px}
+  .pill{display:inline-block;background:#eff6ff;color:var(--navy);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;margin-right:6px}
+  .callout{background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid var(--orange,#f59e0b);padding:12px 16px;border-radius:8px;margin:14px 0;font-size:14px}
+  .ok{color:#059669;font-weight:700}
+  .warn{color:#dc2626;font-weight:700}
+  .two{grid-template-columns:1fr 1fr}
+  @media(max-width:720px){.two{grid-template-columns:1fr}}
+  footer{padding:30px 24px 60px;font-size:12.5px;color:var(--muted)}
+  ul{margin:6px 0 14px;padding-left:20px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker" style="color:#dbeafe">Data Analysis Project · Public Procurement</div>
+    <h1>California State Procurement: Spend, Concentration &amp; Control</h1>
+    <p class="sub">A 346k-record analysis of state purchase orders to find where money concentrates, which buys are uncontrolled, and what to do about it — turning raw procurement data into an actionable cost &amp; compliance plan.</p>
+    <div class="meta">Source: CA Department of General Services purchase-order extract (FY 2012–2015) · 346,018 order lines · $151.2B total spend</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <a href="#s1">1 · Objective</a>
+    <a href="#s2">2 · Cleaning</a>
+    <a href="#s3">3 · Metrics</a>
+    <a href="#s4">4 · Modeling</a>
+    <a href="#s5">5 · Visualization</a>
+    <a href="#s6">6 · Recommendations</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section id="s1">
+  <div class="kicker">Part 1 · Business Objective</div>
+  <h2>Why this analysis</h2>
+  <p>The State of California runs procurement for <strong>200,533 purchase orders</strong> across <strong>24,732 suppliers</strong>. Procurement teams routinely cannot see three things that drive cost and risk:</p>
+  <ul>
+    <li><strong>Where money concentrates</strong> — a few suppliers or departments swallowing most spend.</li>
+    <li><strong>Which buys are uncontrolled</strong> — purchases routed through non-standard ("flexible") methods that deserve review.</li>
+    <li><strong>Where unit prices look off</strong> — anomalies that may signal overpricing or data-entry errors.</li>
+  </ul>
+  <p><strong>One-sentence goal:</strong> identify the small number of high-impact levers (concentration, control, and reviewable purchases) that let procurement negotiate better, set controls, and protect taxpayer money.</p>
+</section>
+
+<section id="s2">
+  <div class="kicker">Part 2 · Data Cleaning &amp; Preprocessing</div>
+  <h2>How the raw extract became a usable table</h2>
+  <p>The raw CSV had ~909k physical lines but only <strong>346,018 logical records</strong>: many text fields (item name, description) span multiple lines, so naive row reads over-count. Key steps (<code>scripts/clean_data.py</code>):</p>
+  <table>
+    <tr><th>Issue</th><th>Treatment</th><th>Impact</th></tr>
+    <tr><td>Physical vs logical rows</td><td>Read full rows; multi-line text fields belong to one record</td><td>909k lines → 346,018 clean records, 0 rows lost</td></tr>
+    <tr><td>Money as <code>$1,234.56</code> strings</td><td>Strip <code>$</code>/commas, parse to float</td><td>Unit &amp; total price usable for math</td></tr>
+    <tr><td>Dates as <code>MM/DD/YYYY</code> text</td><td>Parse to datetime, derive month/fiscal-year</td><td>Time trends + FY year-end peaks visible</td></tr>
+    <tr><td>Location dirty field <code>"ZIP\n(lat,lon)"</code></td><td>Keep only 5-digit ZIP</td><td>262,270 lines with clean ZIP</td></tr>
+    <tr><td>UNSPSC code</td><td>Keep first 2 digits as product segment</td><td>Category roll-ups possible</td></tr>
+    <tr><td>Acquisition method</td><td>Map to control class: competitive / exempt / flexible</td><td>Identifies uncontrolled spend</td></tr>
+  </table>
+  <p class="muted">No rows were dropped for cleaning; the 909k→346k difference is a reading artifact, not data loss.</p>
+</section>
+
+<section id="s3">
+  <div class="kicker">Part 3 · Metrics</div>
+  <h2>Headline numbers</h2>
+  <div class="grid cards">
+    <div class="card"><div class="num">$151.2B</div><div class="lbl">Total procurement spend</div></div>
+    <div class="card"><div class="num">200,533</div><div class="lbl">Purchase orders</div></div>
+    <div class="card"><div class="num">24,732</div><div class="lbl">Suppliers</div></div>
+    <div class="card"><div class="num">41.4%</div><div class="lbl">Top-10 supplier share</div></div>
+    <div class="card"><div class="num">0.0265</div><div class="lbl">HHI (low concentration)</div></div>
+  </div>
+
+  <h3>Metric definitions</h3>
+  <table>
+    <tr><th>Metric</th><th>Formula / definition</th><th>Why it matters</th></tr>
+    <tr><td>Total spend</td><td>Σ total_price over all lines</td><td>Scale of the program</td></tr>
+    <tr><td>Top-10 share</td><td>Σ top-10 suppliers ÷ total</td><td>How concentrated purchasing is</td></tr>
+    <tr><td>HHI</td><td>Σ (supplier_share)²</td><td>Standard concentration index (0–1)</td></tr>
+    <tr><td>Method control class</td><td>competitive / exempt / flexible</td><td>Share of spend outside standard channels</td></tr>
+    <tr><td>Flexible-method spend</td><td>Σ spend on SOQ, NCB, Emergency, etc.</td><td>Reviewable / higher-risk purchasing</td></tr>
+    <tr><td>Unit-cost anomaly</td><td>MAD-based deviation from segment median</td><td>Lines whose unit price is far from peers</td></tr>
+  </table>
+</section>
+
+<section id="s4">
+  <div class="kicker">Part 4 · Modeling</div>
+  <h2>Business-driven methods (principle · why · how)</h2>
+
+  <h3>4.1 Supplier segmentation with KMeans clustering</h3>
+  <p><strong>Principle.</strong> KMeans groups suppliers into clusters so that suppliers inside a cluster are similar and clusters are as different as possible, by scaling 5 features: total spend, order count, category breadth, max-line share, and average line value.</p>
+  <p><strong>Why (business-driven).</strong> Negotiation effort is scarce. The question is <em>"which suppliers deserve a strategic relationship?"</em> — a cost problem, not a statistics exercise. A simple threshold on spend alone would miss one-off giants vs. steady core vendors.</p>
+  <p><strong>How.</strong> Features standardized (StandardScaler), <code>k=3</code> (chosen by business sense: core / regular / one-off), <code>n_init=10</code> for stability, random seed fixed.</p>
+  <table>
+    <tr><th>Tier</th><th>Suppliers</th><th>Spend</th><th>Share</th><th>Action</th></tr>
+    <tr><td>Core (strategic)</td><td>8</td><td>$53.5B</td><td>35.4%</td><td>Negotiate consolidated contracts</td></tr>
+    <tr><td>Regular</td><td>10,666</td><td>$84.3B</td><td>55.7%</td><td>Policy + catalog compliance</td></tr>
+    <tr><td>One-off</td><td>14,058</td><td>$13.4B</td><td>8.9%</td><td>Consolidate; watch tail</td></tr>
+  </table>
+  <p class="muted">The 8 core vendors are all healthcare-payer organizations (Health Net, L.A. Care, Delta Dental, Blue Cross, IEHP, Fresno-Kings-Madera, and partners) — concentration is fundamentally a healthcare-payer phenomenon.</p>
+
+  <h3>4.2 Unit-cost anomaly detection (MAD rule, on goods only)</h3>
+  <p><strong>Principle.</strong> The Median Absolute Deviation (MAD) measures how far values spread around the median, robustly (unlike mean ± σ, it is not distorted by the outliers it is trying to find). A line is flagged when its unit cost is &gt;3×MAD above its segment median.</p>
+  <p><strong>Why.</strong> After a first pass, we deliberately <span class="warn">did not</span> use total-spend anomaly detection: that flagged huge but <em>legitimate</em> medical contracts (83% of spend) — meaningless. We restrict to goods lines with quantity ≥ 2 (comparable unit prices) and compare within a product segment, to avoid "comparing helicopters to patrol cars".</p>
+  <p><strong>How &amp; honest caveat.</strong> 32,433 goods lines (of 124,290 comparable) are flagged, ~$731.7M. But inspection shows the top flags are <em>legitimate</em> big buys (helicopters, police interceptors, fire apparatus). <strong>Conclusion:</strong> with no SKU-level or market-price baseline, statistical unit-price flags are unreliable; we treat them as <em>a review queue, not a verdict</em>.</p>
+
+  <h3>4.3 Control-class review list (business rule)</h3>
+  <p>Purchases made through flexible / non-standard methods are grouped into a <strong>process-review list</strong>: <strong>$6.36B</strong> across 76,129 lines (Statement of Qualifications $1.73B, NCB $1.30B, State Programs $0.95B, Emergency $0.59B, Fair &amp; Reasonable $0.42B, …). These are not presumed bad — they are the subset a reviewer should sample for process compliance.</p>
+
+  <div class="callout"><strong>Why no deep learning here.</strong> This is tabular, ~346k rows, unlabeled. ML clustering + robust statistics answer the questions; DL needs far larger / sequence-shaped data and adds no gain for a compliance story that must stay explainable to stakeholders.</div>
+</section>
+
+<section id="s5">
+  <div class="kicker">Part 5 · Visualization</div>
+  <h2>Charts, each answering one business question</h2>
+
+  <div class="fig"><img src="assets/monthly_trend.png" alt="Monthly spend trend"><div class="cap">Spend peaks in fiscal-year-end months (Mar 2013 = $23B) — a year-end spending pattern.</div></div>
+  <div class="fig"><img src="assets/healthcare_concentration.png" alt="Healthcare concentration"><div class="cap">Health Care Services alone = 66% of all spend.</div></div>
+  <div class="fig"><img src="assets/top10_suppliers.png" alt="Top 10 suppliers"><div class="cap">Top-10 suppliers = 41.4% — all healthcare-payer organizations.</div></div>
+  <div class="fig"><img src="assets/department.png" alt="Department spend"><div class="cap">Spend by department; health dominates, remainder is a long tail.</div></div>
+  <div class="fig"><img src="assets/category_segment.png" alt="Category segments"><div class="cap">UNSPSC segment 85 (healthcare) = 73.9% of spend.</div></div>
+  <div class="fig"><img src="assets/supplier_tier.png" alt="Supplier segmentation"><div class="cap">8 core vendors = 35.4% of spend — the negotiation lever.</div></div>
+  <div class="fig"><img src="assets/method_control.png" alt="Method control"><div class="cap">Control classes: competitive vs exempt vs flexible ($6.36B reviewable).</div></div>
+  <div class="fig"><img src="assets/unit_cost_outliers.png" alt="Unit cost outliers"><div class="cap">Unit-cost flags are mostly large, legitimate buys — used as a review queue, not a verdict.</div></div>
+</section>
+
+<section id="s6">
+  <div class="kicker">Part 6 · Recommendations</div>
+  <h2>Actionable plan</h2>
+  <div class="grid two">
+    <div class="card">
+      <span class="pill">High impact</span>
+      <h3 style="margin-top:6px">1 · Consolidate the 8 core vendors</h3>
+      <p>35.4% of spend sits with 8 healthcare-payer suppliers. Run consolidated contract negotiations and volume rebates. Even a modest 2–3% price bring-down on the core tier = <strong>$1.0–1.6B</strong> annual leverage.</p>
+    </div>
+    <div class="card">
+      <span class="pill">High impact</span>
+      <h3 style="margin-top:6px">2 · Review the $6.36B flexible-method spend</h3>
+      <p>Sample SOQ / NCB / Emergency / Fair &amp; Reasonable lines for process compliance. Flexible methods are legitimate but higher-risk; a sampling regime (e.g. top-200 by spend) catches off-contract drift without choking operations.</p>
+    </div>
+    <div class="card">
+      <span class="pill">Control</span>
+      <h3 style="margin-top:6px">3 · Set a managed-spend target</h3>
+      <p>Raise the share of spend through competitive / framework channels; track a monthly "spend under management" KPI alongside the fiscal-year-end peaks to dampen year-end buying spikes.</p>
+    </div>
+    <div class="card">
+      <span class="pill">Governance</span>
+      <h3 style="margin-top:6px">4 · Stand up a unit-price review queue</h3>
+      <p>Keep the 32k-flag goods list as a weekly review queue with human sign-off — with a SKU-level or market-price baseline added later, it becomes a real overpricing detector rather than a screen.</p>
+    </div>
+  </div>
+  <p class="muted">Deliverables in repo: cleaned table (<code>output/procurement_clean.parquet</code>), anomaly / flexible / segmentation outputs, charts (<code>assets/</code>), and this report.</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">Prepared from California DGS procurement data (FY2012–2015). Analysis scripts: <code>clean_data.py</code>, <code>analyze.py</code>, <code>analyze_extended.py</code>, <code>ml_analysis.py</code>, <code>generate_charts.py</code>.</div>
+</footer>
+
+</body>
+</html>
