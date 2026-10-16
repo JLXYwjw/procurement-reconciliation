@@ -6,7 +6,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
-OUTPUT_DIR = os.path.join(ROOT, "output")
+OUTPUT_DIR = os.path.join(ROOT, "data", "output")
 ASSET_DIR = os.path.join(ROOT, "assets")
 
 # Paths to analysis outputs (excluded from git but present locally)

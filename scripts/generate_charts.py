@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, "output")
+OUT_DIR = os.path.join(ROOT, "data", "output")
 ASSET_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ASSET_DIR, exist_ok=True)
 

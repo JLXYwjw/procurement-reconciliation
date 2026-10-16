@@ -19,8 +19,8 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, "output")
-df = pd.read_parquet(os.path.join(ROOT, "output", "procurement_clean.parquet"))
+OUT_DIR = os.path.join(ROOT, "data", "output")
+df = pd.read_parquet(os.path.join(ROOT, "data", "output", "procurement_clean.parquet"))
 
 print("ACQUISITION_TYPE_DIST")
 print(df["acquisition_type"].value_counts(dropna=False).to_string())

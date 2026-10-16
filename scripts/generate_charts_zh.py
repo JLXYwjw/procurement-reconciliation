@@ -13,7 +13,7 @@ plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Noto Sans CJK S
 plt.rcParams["axes.unicode_minus"] = False
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, "output")
+OUT_DIR = os.path.join(ROOT, "data", "output")
 ASSET_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ASSET_DIR, exist_ok=True)
 

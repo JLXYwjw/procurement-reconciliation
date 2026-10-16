@@ -26,7 +26,7 @@ Open **`index.html`** in a browser for the full report (business objective → c
 ## Run
 ```bash
 pip install -r requirements.txt
-python scripts/clean_data.py      # raw CSV -> output/procurement_clean.parquet
+python scripts/clean_data.py      # raw CSV -> data/output/procurement_clean.parquet
 python scripts/analyze.py         # headline metrics (CR4/CR8, top-10, HHI)
 python scripts/analyze_extended.py# department / category / monthly trend
 python scripts/supplier_cluster.py# KMeans supplier segmentation -> output/supplier_segmentation.parquet

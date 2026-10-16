@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, "output")
+OUT_DIR = os.path.join(ROOT, "data", "output")
 DATA_NAME = "PURCHASE ORDER DATA EXTRACT 2012-2015_0.csv"
 # default search path inside the repo, so no machine-specific absolute path
 DEFAULT_DATA = os.path.join(ROOT, "data", "raw", DATA_NAME)

@@ -24,7 +24,7 @@ from sklearn.preprocessing import StandardScaler
 from segment_utils import label_tiers
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, "output")
+OUT_DIR = os.path.join(ROOT, "data", "output")
 df = pd.read_parquet(os.path.join(OUT_DIR, "procurement_clean.parquet"))
 
 # ---- build purpose-built features per supplier -----------------------------

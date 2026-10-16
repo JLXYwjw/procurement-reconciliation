@@ -13,3 +13,8 @@ __pycache__/
 # Raw source data lives inside each project (excluded from git)
 data/raw/
 采购项目-拷打清单*.md
+
+# Local analysis notes (kept local, not published)
+采购业务背景手册.md
+单价离群检测-方法与目的.md
+

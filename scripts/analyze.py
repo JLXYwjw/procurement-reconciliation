@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-df = pd.read_parquet(os.path.join(ROOT, "output", "procurement_clean.parquet"))
+df = pd.read_parquet(os.path.join(ROOT, "data", "output", "procurement_clean.parquet"))
 
 print("TOTAL_PRICE_SUM", round(float(df["total_price"].sum()), 2))
 print("UNIQUE_PO", int(df["po_number"].nunique()))
