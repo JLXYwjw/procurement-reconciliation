@@ -81,7 +81,8 @@
     <li><strong>Which payments are uncontrolled</strong> — spend routed through exempt or flexible ("non-standard") methods that deserve governance review.</li>
     <li><strong>One-off vs recurring relationships</strong> — giant one-time settlements vs steady strategic partners, which need different controls.</li>
   </ul>
-  <p><strong>One-sentence goal:</strong> identify the small number of high-impact levers — payment reconciliation for the giant healthcare payees, control review of non-standard methods, and strategic-supplier management — that protect taxpayer money.</p>
+  <p><strong>Scope note on "reconciliation".</strong> This project delivers <em>data-level reconciliation</em>: collapsing a dirty 909k-line extract into one consistent, deduplicated, matchable purchase-order table. Business-level payment reconciliation (claims vs invoices vs POs) needs claims &amp; invoice data that this extract does not contain — we quantify that gap and mark it as the next step rather than claiming to have done it.</p>
+  <p><strong>One-sentence goal:</strong> identify the small number of high-impact levers — control review of non-standard methods, reconciliation &amp; rate-audit of the giant healthcare payees, and strategic-supplier management — that protect taxpayer money.</p>
 </section>
 
 <section id="s2">
@@ -96,8 +97,9 @@
     <tr><td>Location dirty field <code>"ZIP\n(lat,lon)"</code></td><td>Keep only 5-digit ZIP</td><td>262,270 lines with clean ZIP</td></tr>
     <tr><td>UNSPSC code</td><td>Keep first 2 digits as product segment</td><td>Category roll-ups possible</td></tr>
     <tr><td>Acquisition method</td><td>Map to control class: competitive / exempt / flexible</td><td>Identifies uncontrolled spend</td></tr>
+    <tr><td>Dates (esp. Purchase Date)</td><td>Year-sanity check (2000–2026); absurd years (1911–2912) → NaN</td><td>17,634 purchase dates nulled, 0 rows lost</td></tr>
   </table>
-  <p class="muted">No rows were dropped for cleaning; the 909k→346k difference is a reading artifact, not data loss.</p>
+  <p class="muted">No rows were dropped; the 909k→346k difference is a reading artifact. The raw Purchase Date field is dirty (years 1911–2912): 17,634 absurd values are set to NaN so no downstream analysis can silently use them; the clean <code>creation_date</code> (2012–2015) drives the time trends.</p>
 </section>
 
 <section id="s3">
@@ -192,7 +194,7 @@
   <h3>4.1 Supplier segmentation with KMeans clustering</h3>
   <p><strong>Principle.</strong> KMeans groups suppliers so those inside a cluster are similar and clusters differ, using scaled features of <em>scale × stickiness</em>: total spend, avg order, order count, order frequency, and years active (log/standardised).</p>
   <p><strong>Why (business-driven).</strong> A spend ranking alone is misleading: it cannot tell a <em>one-off giant settlement</em> from a <em>steady multi-year strategic partner</em> — two groups that need completely different controls. Clustering separates them.</p>
-  <p><strong>How.</strong> StandardScaler → business-chosen <code>k=4</code> (silhouette favours 2, but that is one big blob, not resolvable) → <code>n_init=10</code>, seed fixed. The recurring core cluster is then verified against a naive top-N cut.</p>
+  <p><strong>How.</strong> StandardScaler → business-chosen <code>k=4</code> (silhouette favours 2 — one big blob, not resolvable; k=5/6 score higher but only subdivide the low-frequency tail with no new business-meaningful group) → <code>n_init=10</code>, seed fixed. The recurring core is verified against a naive top-N cut: overlap with top-20 spenders is only 6 of 1,921.</p>
   <table>
     <tr><th>Tier</th><th>Suppliers</th><th>Spend</th><th>Share</th><th>Character</th></tr>
     <tr><td>Core (recurring)</td><td>1,921</td><td>$45.6B</td><td>30.1%</td><td>Multi-year, high-frequency partners — strategic-relationship targets</td></tr>
@@ -200,6 +202,7 @@
     <tr><td>Regular</td><td>6,917</td><td>$1.36B</td><td>0.9%</td><td>Mid-size, occasional</td></tr>
     <tr><td>Tail</td><td>11,311</td><td>$0.17B</td><td>0.1%</td><td>Small, one-off</td></tr>
   </table>
+  <p><strong>Reading the core honestly.</strong> The recurring core is not all "vendors": <strong>190 entities are public bodies</strong> (County/City/State — County of Los Angeles $4.4B, Ventura $3.0B…), i.e. 57.8% of core spend, plus 1 "Unknown". These are intergovernmental payments, not negotiable suppliers; the remaining ~42% of core is the private strategic-supplier set that recommendation #3 targets.</p>
   <div class="fig">
     <img src="assets/supplier_tier.png" alt="Supplier segmentation">
     <div class="why">
@@ -228,7 +231,19 @@
     </div>
   </div>
 
-  <div class="callout"><strong>Methodology notes.</strong> (1) A unit-cost anomaly screen was evaluated (MAD vs segment median) and <strong>dropped</strong>: with only the 2-digit UNSPSC segment, goods are mixed at too coarse a grain, so the ~26% flag rate is methodologically unreliable (a healthy MAD-3 rate is &lt;1%). It is kept only as reproducible evidence that a like-for-like (SKU/market-price) baseline is required before outlier verdicts. (2) <strong>No deep learning here.</strong> This is tabular, ~346k rows, unlabeled; ML clustering + robust statistics answer the questions, while DL needs far larger / sequence-shaped data and adds no explainability for a compliance story.</div>
+  <div class="fig">
+    <img src="assets/method_by_tier.png" alt="Method control by tier">
+    <div class="why">
+      <div class="tag so">Insight</div>
+      <p>Crossing method with segmentation flips the intuition: <strong>exempt is concentrated in the recurring core (59.7%)</strong> — largely intergovernmental legal transfers — while the <strong>one-off/large tier is mostly competitive (≈66%)</strong>. Exempt ≠ the big one-off payments.</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">Action</div>
+      <p>Govern two different things: document the exemption basis for the <strong>core</strong> (intergovernmental transfers), and run <strong>claims-vs-invoice-vs-PO reconciliation on the one-off/large tier's competitive contracts</strong> — a separate workstream.</p>
+    </div>
+  </div>
+
+  <div class="callout"><strong>Methodology notes.</strong> (1) A unit-cost anomaly screen was evaluated (MAD vs segment median) and <strong>dropped</strong>: with only the 2-digit UNSPSC segment, goods are mixed at too coarse a grain, so the ~26% flag rate is methodologically unreliable (for near-normal data a MAD-3 cutoff flags an extreme tail, but right-skewed price distributions inflate that rate). Kept only as reproducible evidence that a like-for-like (SKU/market-price) baseline is required before any outlier verdict. (2) <strong>No deep learning here.</strong> Tabular ~346k unlabeled rows; ML clustering + robust statistics answer the questions, while DL needs far larger / sequence-shaped data and adds no explainability for a compliance story.</div>
 </section>
 
 <section id="s5">
@@ -237,18 +252,18 @@
   <div class="grid two">
     <div class="card">
       <span class="pill">High impact</span>
-      <h3 style="margin-top:6px">1 · Stand up a healthcare-payment reconciliation workstream</h3>
-      <p>68.8% of spend is one-off/large, concentrated in 41.4% top healthcare-payer payees. Reconcile claims vs invoices vs POs, audit rate agreements &amp; settlement timing, and track un-reversed rebates — that is the real money lever.</p>
+      <h3 style="margin-top:6px">1 · Run payment reconciliation on the one-off/large tier</h3>
+      <p>68.8% of spend is one-off/large, concentrated in 41.4% top healthcare-payer payees and mostly competitive contracts. Reconcile claims vs invoices vs POs and audit rate &amp; settlement timing — this requires claims/invoice data the extract lacks, so it is marked as the next step, not claimed as done.</p>
     </div>
     <div class="card">
       <span class="pill">High impact</span>
-      <h3 style="margin-top:6px">2 · Attach a documented rationale to exempt + review flexible spend</h3>
-      <p>40.1% of spend is legally exempt and $6.36B is flexible. Sample the top flexible buys and document the basis for each exempt payment, so control is provable rather than assumed.</p>
+      <h3 style="margin-top:6px">2 · Document exempt spend in the core, review flexible spend</h3>
+      <p>Exempt (40.1%) is concentrated in the recurring core (59.7%) — largely intergovernmental legal transfers. Attach a documented rationale there; sample the $6.36B flexible-method buys.</p>
     </div>
     <div class="card">
       <span class="pill">Governance</span>
-      <h3 style="margin-top:6px">3 · Manage the recurring-core relationships deliberately</h3>
-      <p>The 1,921 core suppliers (30.1% of spend, multi-year) deserve strategic-account management; the one-off tier goes to the reconciliation queue instead of a negotiation table.</p>
+      <h3 style="margin-top:6px">3 · Manage the private strategic core deliberately</h3>
+      <p>Of the 1,921 recurring-core payees, ~42% are private multi-year suppliers (30.1% of spend overall); manage them as strategic accounts. The ~58% public bodies are intergovernmental payments — govern, don't negotiate.</p>
     </div>
     <div class="card">
       <span class="pill">Baseline</span>

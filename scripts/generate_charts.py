@@ -176,4 +176,28 @@ _save(fig, "healthcare_concentration.png")
 # MAD-3 rate is <1%). Kept goods_anomaly.parquet as reproducible evidence;
 # the report states this explicitly instead of showing a misleading chart.
 
+# --- 9) tier x method-class: exempt is concentrated in core, not one-off -----
+dfm = df.merge(sup[["supplier_name", "tier"]], on="supplier_name", how="left")
+tiers = ["core_strategic", "oneoff_large", "regular", "tail"]
+classes = ["competitive", "exempt", "flexible"]
+sh = dfm.groupby(["tier", "method_class"])["total_price"].sum().unstack(fill_value=0)
+sh = sh.div(sh.sum(axis=1), axis=0).reindex(tiers).reindex(classes, axis=1).fillna(0)
+fig, ax = plt.subplots(figsize=(9, 4.2))
+bottom = np.zeros(len(tiers))
+colors_m = {"competitive": GREEN, "exempt": GREY, "flexible": ORANGE}
+for c in classes:
+    vals = sh[c].values
+    ax.bar(tiers, vals, bottom=bottom, color=colors_m[c], label=c)
+    bottom += vals
+for i, t in enumerate(tiers):
+    pct = sh["exempt"][t] * 100
+    ax.text(i, 0.55, f"exempt {pct:.0f}%", ha="center", va="center",
+            fontsize=9, fontweight="bold")
+ax.set_title("Method control share by tier — exempt concentrates in recurring core, not one-off",
+             fontsize=10.5, fontweight="bold")
+ax.legend(fontsize=8)
+ax.set_ylabel("Share of tier spend")
+ax.grid(axis="y", alpha=0.3, lw=0.5)
+_save(fig, "method_by_tier.png")
+
 print("DONE")

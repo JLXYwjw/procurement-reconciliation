@@ -2,6 +2,8 @@
 
 Analysis of a large, real CA statewide procurement extract to surface cost, concentration and control issues, ending in actionable recommendations.
 
+**Scope note.** "Reconciliation" here is **data-level**: collapsing a dirty 909k-line extract into one consistent, deduplicated, matchable purchase-order table. Business-level payment reconciliation (claims vs invoices vs POs) needs claims/invoice data this extract lacks — the report quantifies that gap and lists it as the next step rather than claiming to have done it.
+
 **The business problem.** The state pays huge sums through thousands of purchase orders but often cannot see where money concentrates, which payments are uncontrolled (exempt / flexible channels), and which payees need reconciliation. This project cleans a 346k-record procurement extract and quantifies those issues so finance & procurement can target reconciliation, governance and strategic-supplier work where it matters.
 
 ## Status
@@ -30,12 +32,13 @@ python -m pytest tests -q         # unit + report + output contract tests
 ## Key findings
 - **$151.2B** spend, 200,533 POs, 24,732 suppliers; CR4 = **26.5%**, CR8 = **37.4%**, top-10 = **41.4%** (all healthcare-payer orgs).
 - **Health Care Services = 66%** of spend; UNSPSC segment 85 (healthcare) = **73.9%**.
-- Spend is **lumpy**: one-off/large settlements = **68.8%** of spend (4,583 payees), while a **30.1% recurring core** (1,921 multi-year partners) is the strategic-relationship tier — a split a spend ranking cannot produce.
-- **40.1% of spend is legally exempt** (documented rationale needed) and **$6.36B** is flexible-method (process-review list).
+- Spend is **lumpy**: one-off/large settlements = **68.8%** of spend (4,583 payees), while a **30.1% recurring core** (1,921 multi-year partners) is the strategic tier — a split a spend ranking cannot produce. ~58% of that core is public bodies (intergovernmental transfers); ~42% is private strategic suppliers.
+- **40.1% of spend is legally exempt**, concentrated in the recurring core (59.7%) — mostly intergovernmental transfers — while the one-off/large tier is mostly competitive (≈66%); **$6.36B** is flexible-method (process-review list).
+- **Data quality**: raw Purchase Date is dirty (years 1911–2912); 17,634 absurd values are nulled (0 rows lost); creation_date (2012–2015, clean) drives the time trends.
 - A unit-cost outlier screen was **evaluated and dropped** (2-digit segment too coarse; ~26% flag rate unreliable) — kept as reproducible evidence that a SKU/market-price baseline is required before any price verdict.
 
 ## Recommendations (summary)
-1. Stand up a healthcare-payment **reconciliation** workstream (claims vs invoice vs PO, rate & settlement audit) for the one-off/large tier.
-2. Attach a documented rationale to **exempt** spend + sample-review the **flexible** $6.36B.
-3. Manage the 1,921 **recurring-core** suppliers as strategic accounts.
+1. Run payment **reconciliation** on the one-off/large tier (claims vs invoice vs PO, rate & settlement audit) — flagged as the next step needing claims/invoice data.
+2. Document exempt spend in the core + sample-review the flexible $6.36B.
+3. Manage the ~42% **private** recurring-core suppliers as strategic accounts; govern the public bodies.
 4. Build a SKU / market-price **baseline** before any unit-price verdict.
