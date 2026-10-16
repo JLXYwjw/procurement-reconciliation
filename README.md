@@ -15,7 +15,13 @@ Analysis of a large, real CA statewide procurement extract to surface cost, conc
 - [x] Tests (`tests/`)
 
 ## Report
-Open **`index.html`** in a browser for the full report (business objective → cleaning → metrics → modeling → recommendations).
+Open **`index.html`** in a browser for the full report (business objective → cleaning → metrics → modeling → recommendations). GitHub does not render HTML in-repo — preview the key charts below:
+
+## Visuals
+
+![Healthcare concentration](assets/healthcare_concentration.png)
+![Top 10 suppliers](assets/top10_suppliers.png)
+![Method control](assets/method_control.png)
 
 ## Run
 ```bash
