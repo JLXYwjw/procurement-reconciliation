@@ -56,6 +56,14 @@ def parse_amount(x):
         return np.nan
 
 
+def _plausible_year(d, lo=2000, hi=2026):
+    """A date is plausible only if it falls in a sane year range; NaN is kept
+    as NaN (it is a legitimately-missing value, not a dirty one)."""
+    if pd.isna(d):
+        return True
+    return lo <= d.year <= hi
+
+
 def main():
     parser = argparse.ArgumentParser(description="Clean the CA procurement extract.")
     parser.add_argument("--src", default=None,
@@ -77,6 +85,15 @@ def main():
     )
     df["purchase_date"] = pd.to_datetime(
         df["Purchase Date"], format="%m/%d/%Y", errors="coerce"
+    )
+    # Date sanity: the raw Purchase Date field is dirty (years from 1911 to
+    # 2912). Only keep plausible years; the rest become NaN so no downstream
+    # analysis can silently use an absurd date.
+    df["creation_date"] = df["creation_date"].where(
+        df["creation_date"].map(lambda d: _plausible_year(d, 2000, 2026))
+    )
+    df["purchase_date"] = df["purchase_date"].where(
+        df["purchase_date"].map(lambda d: _plausible_year(d, 2000, 2026))
     )
 
     # --- derived features ---
@@ -120,6 +137,10 @@ def main():
     clean.to_parquet(out, index=False)
     print("ROWS", len(clean))
     print("OUT", out)
+    print("CREATION_DATE_VALID", int(clean["creation_date"].notna().sum()),
+          "INVALID_OR_MISSING", int(clean["creation_date"].isna().sum()))
+    print("PURCHASE_DATE_VALID", int(clean["purchase_date"].notna().sum()),
+          "INVALID_OR_MISSING", int(clean["purchase_date"].isna().sum()))
     print("METHOD_CLASS_DIST")
     print(clean["method_class"].value_counts(dropna=False).to_string())
     print("ZIP_PRESENT", int(clean["zip_code"].notna().sum()))
