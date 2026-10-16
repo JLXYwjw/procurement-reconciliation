@@ -125,28 +125,34 @@ ax.set_ylabel("Spend ($B)")
 ax.grid(axis="y", alpha=0.3, lw=0.5)
 _save(fig, "method_control.png")
 
-# --- 6) Supplier segmentation (KMeans tiers) --------------------------------
+# --- 6) Supplier segmentation (KMeans tiers, strategic split) ----------------
 sup = pd.read_parquet(os.path.join(OUT_DIR, "supplier_segmentation.parquet"))
 tier = sup.groupby("tier").agg(
     suppliers=("supplier_name", "count"),
     spend=("total_spend", "sum"),
-).sort_values("spend", ascending=False)
+    med_years=("years_active", "median"),
+)
 tier["spend"] = tier["spend"] / 1e9
-fig, ax = plt.subplots(figsize=(8.5, 4.4))
-order = tier.index.tolist()
-labels = {"core": "Core (strategic)", "regular": "Regular", "oneoff": "One-off"}
-colors = {"core": NAVY, "regular": BLUE, "oneoff": LIGHT}
+order = ["tail", "regular", "oneoff_large", "core_strategic"]
+labels = {
+    "core_strategic": "Core (recurring)",
+    "oneoff_large": "One-off / large",
+    "regular": "Regular",
+    "tail": "Tail",
+}
+colors = {"core_strategic": NAVY, "oneoff_large": ORANGE, "regular": BLUE, "tail": LIGHT}
+fig, ax = plt.subplots(figsize=(8.6, 4.4))
 for i, t in enumerate(order):
-    ax.barh(order[::-1][i], tier["spend"][order[::-1][i]], color=colors[order[::-1][i]])
-labels_y = [labels[o] for o in order[::-1]]
+    ax.barh(i, tier["spend"][t], color=colors[t])
 ax.set_yticks(range(len(order)))
-ax.set_yticklabels(labels_y, fontsize=10)
-for i, t in enumerate(order[::-1]):
-    ax.text(tier["spend"][t] + 1, i,
-            f"${tier['spend'][t]:.1f}B · {int(tier['suppliers'][t]):,} vendors",
+ax.set_yticklabels([labels[t] for t in order], fontsize=10)
+for i, t in enumerate(order):
+    share = tier["spend"][t] / tier["spend"].sum() * 100
+    ax.text(tier["spend"][t] + 0.4, i,
+            f"${tier['spend'][t]:.1f}B · {int(tier['suppliers'][t]):,} vendors · {share:.1f}%",
             va="center", fontsize=9)
-ax.set_title("Supplier Segmentation — 8 core vendors = 35.4% of spend",
-             fontsize=12, fontweight="bold")
+ax.set_title("Supplier Segmentation — 68.8% of spend is one-off/large, 30.1% recurring core",
+             fontsize=11, fontweight="bold")
 ax.set_xlabel("Spend ($B)")
 ax.grid(axis="x", alpha=0.3, lw=0.5)
 _save(fig, "supplier_tier.png")

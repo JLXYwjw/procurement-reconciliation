@@ -74,37 +74,12 @@ fm = flex.groupby("acquisition_method")["total_price"].agg(["sum", "count"]).sor
 print(fm.head(10).to_string())
 
 # ---------------------------------------------------------------------------
-# 3) Supplier segmentation (KMeans) - unchanged, good result
+# 3) Supplier segmentation is OWNED by supplier_cluster.py (v2, strategic
+#    size x stickiness split). Removed here so ml_analysis does not overwrite
+#    the v2 output with the old size-only split.
 # ---------------------------------------------------------------------------
-sup = (
-    df.groupby("supplier_name")
-    .agg(
-        total_spend=("total_price", "sum"),
-        order_count=("po_number", "nunique"),
-        line_count=("total_price", "count"),
-        category_breadth=("segment", "nunique"),
-        max_line=("total_price", "max"),
-    )
-    .reset_index()
-)
-sup["avg_line"] = sup["total_spend"] / sup["line_count"].replace(0, np.nan)
-sup["max_line_share"] = sup["max_line"] / sup["total_spend"].replace(0, np.nan)
-X = StandardScaler().fit_transform(
-    sup[["total_spend", "order_count", "category_breadth", "max_line_share", "avg_line"]].fillna(0)
-)
-km = KMeans(n_clusters=3, n_init=10, random_state=42)
-sup["tier"] = km.fit_predict(X)
-tier_order = sup.groupby("tier")["total_spend"].median().sort_values(ascending=False).index.tolist()
-label_map = {tier_order[0]: "core", tier_order[1]: "regular", tier_order[2]: "oneoff"}
-sup["tier"] = sup["tier"].map(label_map)
 
-ts = sup.groupby("tier").agg(suppliers=("supplier_name", "count"), spend=("total_spend", "sum")).sort_values("spend", ascending=False)
-ts["spend_share"] = ts["spend"] / ts["spend"].sum()
-print("\nSUPPLIER_TIER_SUMMARY")
-print(ts.to_string())
-
-# persistence
+# persistence (anomaly + flexible lists only; segmentation owned elsewhere)
 gg.to_parquet(os.path.join(OUT_DIR, "goods_anomaly.parquet"), index=False)
 flex.to_parquet(os.path.join(OUT_DIR, "flexible_review.parquet"), index=False)
-sup.to_parquet(os.path.join(OUT_DIR, "supplier_segmentation.parquet"), index=False)
-print("\nSAVED goods_anomaly / flexible_review / supplier_segmentation")
+print("\nSAVED goods_anomaly / flexible_review")

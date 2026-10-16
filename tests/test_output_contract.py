@@ -42,12 +42,17 @@ def test_health_care_department_dominates():
     assert 0.62 < hc < 0.70
 
 
-def test_supplier_segmentation_has_three_tiers():
+def test_supplier_segmentation_strategic_split():
     sup = pd.read_parquet(SUPPLIER_SEG)
-    assert set(sup["tier"]) == {"core", "regular", "oneoff"}
-    core = sup[sup["tier"] == "core"]
-    assert len(core) == 8
-    assert core["total_spend"].sum() / sup["total_spend"].sum() == pytest.approx(0.354, rel=0.05)
+    assert set(sup["tier"]) == {"core_strategic", "oneoff_large", "regular", "tail"}
+    core = sup[sup["tier"] == "core_strategic"]
+    once = sup[sup["tier"] == "oneoff_large"]
+    # one-off/large dominates spend (~68.8%) - the key strategic insight
+    assert once["total_spend"].sum() / sup["total_spend"].sum() == pytest.approx(0.688, rel=0.05)
+    # the two high-spend tiers are genuinely different: recurring vs single-year
+    assert core["years_active"].median() >= 2
+    assert once["years_active"].median() < 2
+    assert len(core) >= 1000
 
 
 def test_method_class_no_null():
