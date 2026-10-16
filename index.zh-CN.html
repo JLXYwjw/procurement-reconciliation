@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>加州州级采购 —— 支出、集中度与控制分析</title>
+<style>
+  :root{--navy:#0284c7;--blue:#0ea5e9;--accent:#f59e0b;--accent-soft:#fffbeb;--ink:#0f172a;--muted:#64748b;--line:#e0f2fe;--bg:#f0f9ff;--card:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+  header.hero{background:linear-gradient(135deg,#0369a1,#38bdf8);color:#fff;padding:56px 24px 44px;margin-bottom:8px}
+  header.hero h1{margin:0 0 10px;font-size:30px;line-height:1.2}
+  header.hero .sub{opacity:.93;font-size:16px;max-width:840px}
+  header.hero .meta{margin-top:18px;font-size:13px;opacity:.85}
+  nav.tabs{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5;padding:10px 24px}
+  nav.tabs .wrap{padding:0;display:flex;gap:6px;flex-wrap:wrap;max-width:1080px}
+  nav.tabs a{color:var(--blue);text-decoration:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px}
+  nav.tabs a:hover{background:#e0f2fe}
+  section{padding:36px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:22px;color:var(--ink);margin:0 0 6px}
+  h2 .n{color:var(--blue)}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+  h3{font-size:16px;margin:22px 0 6px;color:var(--ink)}
+  p,li{font-size:14.5px}
+  .muted{color:var(--muted)}
+  .grid{display:grid;gap:16px}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:18px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(2,132,199,.06)}
+  .card .num{font-size:26px;font-weight:800;color:var(--navy)}
+  .card .lbl{font-size:13px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f0f9ff;font-weight:700;color:var(--navy)}
+  .fig{margin:22px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(2,132,199,.06)}
+  .fig img{max-width:100%;border-radius:8px;background:#fff;display:block;margin:0 auto}
+  .fig .why{display:flex;gap:12px;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+  .fig .why .tag{flex:0 0 54px;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+  .fig .why .tag.so{color:var(--blue)}
+  .fig .why .tag.rec{color:var(--accent)}
+  .fig .why p{margin:0;font-size:13.5px}
+  .pill{display:inline-block;background:#e0f2fe;color:var(--navy);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;margin-right:6px}
+  .callout{background:var(--accent-soft);border:1px solid #fde68a;border-left:4px solid var(--accent);padding:12px 16px;border-radius:8px;margin:14px 0;font-size:14px}
+  .ok{color:#059669;font-weight:700}
+  .warn{color:#f43f5e;font-weight:700}
+  .two{grid-template-columns:1fr 1fr}
+  @media(max-width:720px){.two{grid-template-columns:1fr}}
+  footer{padding:30px 24px 60px;font-size:12.5px;color:var(--muted)}
+  ul{margin:6px 0 14px;padding-left:20px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker" style="color:#e0f2fe">数据分析项目 · 政府采购与支付对账</div>
+    <h1>加州州级采购：支出、集中度与控制</h1>
+    <p class="sub">对 34.6 万条州级采购订单做分析：找出钱集中在哪、哪些支付带对账与控制风险、以及该怎么办——把原始采购数据变成可落地的成本与合规方案。</p>
+    <div class="meta">数据来源：加州总务局采购订单导出（FY 2012–2015）· 346,018 条订单行 · 总支出 $151.2B</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <a href="#s1"><span class="n">1</span> · 分析目标</a>
+    <a href="#s2"><span class="n">2</span> · 数据清洗</a>
+    <a href="#s3"><span class="n">3</span> · 指标与图表</a>
+    <a href="#s4"><span class="n">4</span> · 建模</a>
+    <a href="#s5"><span class="n">5</span> · 建议</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section id="s1">
+  <div class="kicker">第一部分 · 业务目标</div>
+  <h2><span class="n">1.</span> 为什么做这个分析</h2>
+  <p>加州为 <strong>200,533 张采购订单</strong>、涉及 <strong>24,732 家供应商</strong>执行采购。采购与财务团队通常看不清三件驱动成本与风险的事：</p>
+  <ul>
+    <li><strong>钱集中在哪</strong>——少数医疗支付方组织吞掉大部分支出，而这正是支付对账风险所在。</li>
+    <li><strong>哪些支付不受控</strong>——经豁免或灵活（"非标准"）方法路由的支出，值得治理审查。</li>
+    <li><strong>一次性 vs 长期关系</strong>——巨额头一次性结算 vs 稳定的战略伙伴，需要不同的管控方式。</li>
+  </ul>
+  <p><strong>关于"对账"的边界说明。</strong> 本项目交付<em>数据层对账</em>：把一份脏乱的 90.9 万行导出，归并成一致、去重、可匹配的采购订单表。业务层支付对账（索赔 vs 发票 vs 订单）需要本导出不含的索赔与发票数据——我们量化了这一缺口并把它列为下一步，而不是宣称已经完成。</p>
+  <p><strong>一句话目标：</strong> 识别少数高影响力杠杆——非标准方法的控制审查、巨额医疗支付方的对账与费率审计、战略供应商管理——来保护纳税人资金。</p>
+</section>
+
+<section id="s2">
+  <div class="kicker">第二部分 · 数据清洗与预处理</div>
+  <h2><span class="n">2.</span> 原始导出如何变成可用表</h2>
+  <p>原始 CSV 约有 90.9 万条物理行，但只有 <strong>346,018 条逻辑记录</strong>：许多文本字段（品名、描述）跨多行，简单按行读取会多算。关键步骤（<code>scripts/clean_data.py</code>）：</p>
+  <table>
+    <tr><th>问题</th><th>处理</th><th>影响</th></tr>
+    <tr><td>物理行 vs 逻辑行</td><td>读完整行；多行文本字段属于同一条记录</td><td>90.9 万行 → 346,018 条干净记录，0 行丢失</td></tr>
+    <tr><td>金额为 <code>$1,234.56</code> 字符串</td><td>去掉 <code>$</code>/逗号，解析为浮点</td><td>单价与总价可用于计算</td></tr>
+    <tr><td>日期为 <code>MM/DD/YYYY</code> 文本</td><td>解析为 datetime，派生月份/财年</td><td>时间趋势与巨额支付月份可见</td></tr>
+    <tr><td>位置脏字段 <code>"ZIP\n(lat,lon)"</code></td><td>只保留 5 位邮编</td><td>262,270 行带干净邮编</td></tr>
+    <tr><td>UNSPSC 代码</td><td>取前 2 位作为产品段</td><td>可做类目归并</td></tr>
+    <tr><td>采购方法</td><td>映射为控制类别：竞争 / 豁免 / 灵活</td><td>识别不受控支出</td></tr>
+    <tr><td>日期（尤其 Purchase Date）</td><td>年份合理性检查（2000–2026）；荒谬年份（1911–2912）→ NaN</td><td>17,634 个采购日期置空，0 行丢失</td></tr>
+  </table>
+  <p class="muted">无行被删除；90.9 万→34.6 万的差异是读取口径问题。原始 Purchase Date 字段很脏（年份 1911–2912）：17,634 个荒谬值置为 NaN，使下游分析不能静默使用它们；干净的 <code>creation_date</code>（2012–2015）驱动时间趋势。</p>
+</section>
+
+<section id="s3">
+  <div class="kicker">第三部分 · 指标与图表</div>
+  <h2><span class="n">3.</span> 核心数字</h2>
+  <div class="grid cards">
+    <div class="card"><div class="num">$151.2B</div><div class="lbl">采购总支出</div></div>
+    <div class="card"><div class="num">200,533</div><div class="lbl">采购订单</div></div>
+    <div class="card"><div class="num">24,732</div><div class="lbl">供应商</div></div>
+    <div class="card"><div class="num">26.5%</div><div class="lbl">CR4 — top4 收款方</div></div>
+    <div class="card"><div class="num">37.4%</div><div class="lbl">CR8 — top8 收款方</div></div>
+    <div class="card"><div class="num">41.4%</div><div class="lbl">Top10 供应商份额</div></div>
+  </div>
+
+  <h3>指标定义</h3>
+  <table>
+    <tr><th>指标</th><th>公式 / 定义</th><th>为何重要</th></tr>
+    <tr><td>总支出</td><td>所有行的 Σ total_price</td><td>项目规模</td></tr>
+    <tr><td>CR4 / CR8</td><td>top4 / top8 收款方支出 ÷ 总额</td><td>最大收款方中的集中度（对账目标集合）</td></tr>
+    <tr><td>Top10 份额</td><td>top10 供应商 ÷ 总额</td><td>采购整体集中程度</td></tr>
+    <tr><td>HHI</td><td>Σ (供应商份额)²（次要）</td><td>标准集中度指数（0–1），作为备注</td></tr>
+    <tr><td>方法控制类别</td><td>竞争 / 豁免 / 灵活</td><td>各采购渠道的支出占比</td></tr>
+    <tr><td>豁免方法支出</td><td>Σ 以合法豁免方式路由的支出</td><td>占支出 40.1%——合法但需治理审查，不是"马弗里克式购买"</td></tr>
+    <tr><td>灵活方法支出</td><td>Σ SOQ / NCB / 紧急等支出</td><td>可审查 / 更高风险采购</td></tr>
+  </table>
+
+  <div class="fig">
+    <img src="assets/monthly_trend.png" alt="月度支出趋势">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>支出<strong>是块状的，不是平稳的</strong>：少数巨额支付月份主导（2013-03 = <strong>$23B</strong>，由一笔给某健康计划的 <strong>$11B 支付</strong>驱动；2014-15 的 4/6 月也冲高）。多数月份在 ~$4B 以下。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>围绕<strong>健康支付日历</strong>安排现金流，而不是平均月度目标；把这类一次性/巨额结算当作独立对账工作流，而非常规采购。</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <img src="assets/healthcare_concentration.png" alt="医疗集中度">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>单一部门——<strong>Health Care Services——占全部支出 66%</strong>。凡是驱动健康支付方成本的，就会驱动整个州预算。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>成立专门的<strong>医疗支付方支付项目</strong>：三分之二支出在此，一支专职的对账与费率审计团队可数倍回本。</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <img src="assets/top10_suppliers.png" alt="Top10 供应商">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>Top10 收款方占 <strong>41.4% 的全部支出，且每一个都是医疗支付方组织</strong>（Health Net、L.A. Care、Delta Dental、Blue Cross、IEHP、Molina…）。钱集中在<em>支付接收方</em>，而非货物供应商。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>把这些当作一个<strong>支付对账群体</strong>：核对索赔 vs 发票 vs 订单、审计费率协议与结算时点、跟踪未冲销返点/退货计提——而不是货物议价对象。</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <img src="assets/department.png" alt="部门支出">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>Health Care Services 主导；其余是跨矫正、交通、水利、教育的长尾——每项远低于 4%。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>对长尾，推动标准目录/框架采购，把零散小额采购纳入受管渠道。</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <img src="assets/category_segment.png" alt="类目段">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>按产品类目，UNSPSC 段 85（医疗）= <strong>支出的 73.9%</strong>；其它都望尘莫及。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>为段 85 建立类目基准基线，使高于市场的单价在签约时即显现；配合支付层检查（费率 vs 协议）。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="kicker">第四部分 · 建模</div>
+  <h2><span class="n">4.</span> 业务驱动的方法（原理 · 为什么 · 怎么用）</h2>
+
+  <h3>4.1 用 KMeans 聚类做供应商分层</h3>
+  <p><strong>原理。</strong> KMeans 把供应商分组，使组内相似、组间不同，使用"规模 × 粘性"的缩放特征：总支出、平均订单、订单数、订单频率、活跃年数（对数/标准化）。</p>
+  <p><strong>为什么（业务驱动）。</strong> 仅按支出排名会误导：它分不清<em>一次性巨额结算</em>和<em>稳定的多年战略伙伴</em>——两组需要完全不同的管控。聚类把它们分开。</p>
+  <p><strong>怎么用。</strong> StandardScaler → 业务选定 <code>k=4</code>（轮廓系数偏好 2——一个大团块不可解；k=5/6 分数更高但只是细分低频尾部，不产生新业务含义组）→ <code>n_init=10</code>、固定种子。长期核心与朴素 top-N 截断交叉验证：与 top20 支出者仅重叠 6/1,921。</p>
+  <table>
+    <tr><th>层</th><th>供应商</th><th>支出</th><th>份额</th><th>特征</th></tr>
+    <tr><td>核心（长期）</td><td>1,921</td><td>$45.6B</td><td>30.1%</td><td>多年、高频伙伴——战略关系对象</td></tr>
+    <tr><td>一次性 / 大额</td><td>4,583</td><td>$104.1B</td><td>68.8%</td><td>单次 / 低频大额支付——对账与费率审计群体</td></tr>
+    <tr><td>常规</td><td>6,917</td><td>$1.36B</td><td>0.9%</td><td>中等规模、偶发</td></tr>
+    <tr><td>长尾</td><td>11,311</td><td>$0.17B</td><td>0.1%</td><td>小、一次性</td></tr>
+  </table>
+  <p><strong>对"核心"的诚实解读。</strong> 长期核心并不全是"供应商"：<strong>190 家是公共机构</strong>（县/市/州——洛杉矶县 $4.4B、文图拉 $3.0B…），即占核心支出 57.8%，另有 1 家"Unknown"。这些是政府间支付，不是可议价的供应商；其余约 42% 的核心才是建议 #3 瞄准的私营战略供应商集合。</p>
+  <div class="fig">
+    <img src="assets/supplier_tier.png" alt="供应商分层">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>对"规模 × 粘性"做 KMeans，把 <strong>占支出 68.8% 的一次性/大额</strong>（单年、低频大额结算）与 <strong>占 30.1% 的长期核心</strong>（1,921 家多年伙伴）分开——这是支出排名做不到的切分。核心与 top20 支出者仅重叠 6 家。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>把<strong>一次性/大额层</strong>路由到支付对账工作流（索赔 vs 发票 vs 订单、结算时点、费率 vs 协议）；把关系管理留给长期核心——长期杠杆在这里。</p>
+    </div>
+  </div>
+
+  <h3>4.2 方法控制与豁免渠道</h3>
+  <p><strong>原理。</strong> 每张订单映射为控制类别——<code>competitive</code>（公开竞争）、<code>exempt</code>（合法豁免竞争）、<code>flexible</code>（非标准但可审查的方法，如资格声明、非竞争、紧急）。</p>
+  <p><strong>为什么。</strong> 控制是集中度之后的第二杠杆：不受控支出既是欺诈风险、也是错失节省所在。</p>
+  <p><strong>怎么用与诚实框定。</strong> 支出切分为 <strong>55.7% 竞争 / 40.1% 豁免 / 4.2% 灵活</strong>。豁免的 40.1%（~$60.6B）<em>不是"马弗里克式购买"</em>——许多是合法渠道（医疗支付、法定豁免、单一来源）——但占 40% 就值得附文档化理由 + 抽样，而不是默认接受。</p>
+  <div class="fig">
+    <img src="assets/method_control.png" alt="方法控制">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>竞争与合法豁免方法承担大部分支出；<strong>$6.36B 仍流经值得流程审查的灵活方法</strong>，且豁免份额（40.1%）需要文档化依据。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>抽样审查最高额的灵活方法采购，并为每笔豁免支付<strong>附上文档化豁免理由</strong>；设定"受管支出"目标，把更多采购拉进受控渠道。</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <img src="assets/method_by_tier.png" alt="按层的采购方法">
+    <div class="why">
+      <div class="tag so">洞察</div>
+      <p>把方法 × 分层交叉后直觉反转：<strong>豁免集中在长期核心（59.7%）</strong>——主要是政府间法定转移——而<strong>一次性/大额层多为竞争（≈66%）</strong>。豁免 ≠ 大额一次性支付。</p>
+    </div>
+    <div class="why">
+      <div class="tag rec">建议</div>
+      <p>治理两件不同的事：为<strong>核心</strong>（政府间转移）文档化豁免依据；对一次性/大额层的竞争合同做<strong>索赔-发票-订单对账</strong>——一个独立工作流。</p>
+    </div>
+  </div>
+
+  <div class="callout"><strong>方法论说明。</strong>（1）评估过单价异常筛查（MAD vs 段中位数）并<strong>放弃</strong>：只有 2 位 UNSPSC 段时，商品粒度太粗混在一起，约 26% 的标记率方法论上不可靠（对近正态数据 MAD-3 截断标记极端尾部，但右偏价格分布会夸大该比率）。仅保留为可复现证据，说明任何离群结论前都需同质（SKU/市价）基线。（2）<strong>这里不用深度学习。</strong> 表格型约 34.6 万行无标签；ML 聚类 + 稳健统计能回答问题，DL 需要远更大/序列状数据，且对合规叙事不增加可解释性。</div>
+</section>
+
+<section id="s5">
+  <div class="kicker">第五部分 · 建议</div>
+  <h2><span class="n">5.</span> 汇总成一份可落地的方案</h2>
+  <div class="grid two">
+    <div class="card">
+      <span class="pill">高影响</span>
+      <h3 style="margin-top:6px">1 · 对一次性/大额层跑支付对账</h3>
+      <p>68.8% 的支出是一次性/大额，集中在占 41.4% 的 top 医疗支付方、且多为竞争合同。核对索赔 vs 发票 vs 订单并审计费率与结算时点——这需要导出不含的索赔/发票数据，故列为下一步，不宣称已完成。</p>
+    </div>
+    <div class="card">
+      <span class="pill">高影响</span>
+      <h3 style="margin-top:6px">2 · 为核心豁免支出文档化、审查灵活支出</h3>
+      <p>豁免（40.1%）集中在长期核心（59.7%）——主要是政府间法定转移。在此附文档化理由；抽样审查 $6.36B 的灵活方法采购。</p>
+    </div>
+    <div class="card">
+      <span class="pill">治理</span>
+      <h3 style="margin-top:6px">3 · 刻意管理私营战略核心</h3>
+      <p>1,921 家长期核心收款方中约 42% 是私营多年供应商（占总支出的 30.1%）；当作战略账户管理。约 58% 公共机构是政府间支付——治理，而非议价。</p>
+    </div>
+    <div class="card">
+      <span class="pill">基线</span>
+      <h3 style="margin-top:6px">4 · 任何价格结论前先建基准基线</h3>
+      <p>为段 85 增加 SKU 级 / 市价基线，使未来的单价筛查成为真正的超价检测器，而非误导性标记队列。</p>
+    </div>
+  </div>
+  <p class="muted">仓库交付物：清洗表（<code>output/procurement_clean.parquet</code>）、灵活/异常/分层输出、图表（<code>assets/</code>）、本报告。</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">数据来源：加州总务局采购数据（FY2012–2015）。分析脚本：<code>clean_data.py</code>、<code>analyze.py</code>、<code>analyze_extended.py</code>、<code>ml_analysis.py</code>、<code>supplier_cluster.py</code>、<code>generate_charts.py</code>。</div>
+</footer>
+
+</body>
+</html>
