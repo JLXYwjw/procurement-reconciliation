@@ -19,13 +19,14 @@ OUT_DIR = os.path.join(ROOT, "output")
 ASSET_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ASSET_DIR, exist_ok=True)
 
-BLUE = "#2e6f8e"    # steel blue (primary data color)
-NAVY = "#16324a"    # deep navy (emphasis)
-ORANGE = "#b45309"  # burnt amber (highlight)
-GREEN = "#3f6212"   # muted olive (positive / competitive)
-RED = "#b91c1c"     # muted red (flag / alert)
-GREY = "#6b7280"    # neutral grey
-LIGHT = "#cbd5e1"   # light steel (secondary)
+BLUE = "#0ea5e9"    # sky-500 (primary data)
+NAVY = "#0284c7"    # sky-600 (deep emphasis)
+ORANGE = "#f59e0b"  # amber / golden (highlight)
+GREEN = "#10b981"   # emerald (positive / competitive)
+RED = "#f43f5e"     # rose (flag / alert)
+GREY = "#94a3b8"    # slate-400 (neutral)
+LIGHT = "#bae6fd"   # sky-200 (secondary)
+SKY = "#7dd3fc"     # sky-300 (light data)
 
 
 def _save(fig, name):
@@ -156,7 +157,7 @@ hc = dep_sum.get("Health Care Services, Department of", 0) / grand
 rest = 1 - hc
 fig, ax = plt.subplots(figsize=(7.4, 3.8))
 ax.pie([hc, rest], labels=["Health Care Services", "All other departments"],
-       autopct="%1.1f%%", colors=[RED, "#e5e7eb"], startangle=90,
+       autopct="%1.1f%%", colors=[ORANGE, LIGHT], startangle=90,
        textprops={"fontsize": 10})
 ax.set_title("Health Care Services = 66.0% of total spend", fontsize=12, fontweight="bold")
 _save(fig, "healthcare_concentration.png")
