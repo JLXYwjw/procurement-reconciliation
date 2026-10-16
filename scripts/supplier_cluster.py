@@ -21,6 +21,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
+from segment_utils import label_tiers
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "output")
 df = pd.read_parquet(os.path.join(OUT_DIR, "procurement_clean.parquet"))
@@ -94,23 +96,9 @@ print("CLUSTER_PROFILE")
 print(prof.to_string())
 
 # spend-based rank label first, then refine
-# Label by BUSINESS ROLE, not by spend rank:
-#   core_strategic = the high-spend cluster whose suppliers RECUR (multi-year)
-#   oneoff_large   = the high-spend cluster of single/low-frequency big buys
-#   regular / tail = the rest by spend.
-recur = prof[prof["med_years"] >= 2].sort_values("spend", ascending=False)
-core_c = recur.index[0] if len(recur) else prof.sort_values("spend", ascending=False).index[0]
-once = prof[prof["med_years"] < 2].sort_values("spend", ascending=False)
-oneoff_c = once.index[0] if len(once) else None
-rest = [c for c in prof.index if c not in (core_c, oneoff_c)]
-rest = sorted(rest, key=lambda c: prof.loc[c, "spend"], reverse=True)
-names = {core_c: "core_strategic"}
-if oneoff_c is not None:
-    names[oneoff_c] = "oneoff_large"
-for i, c in enumerate(rest):
-    names[c] = ["regular", "tail"][i]
-prof["tier"] = pd.Series(names).reindex(prof.index)
-label_map = names
+# Label by BUSINESS ROLE (see segment_utils.label_tiers): recurring-high-spend
+# cluster is the core, single-year-high-spend is the one-off/large tier.
+label_map = label_tiers(prof).to_dict()
 sup["tier"] = sup["cluster"].map(label_map)
 
 # ---- verify core is NOT just top spenders ----------------------------------

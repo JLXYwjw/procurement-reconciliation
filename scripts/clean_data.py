@@ -6,14 +6,17 @@ fields span multiple lines). We normalize money, dates and identifiers, derive
 feature columns (zip, UNSPSC segment, acquisition-method control class), then
 save a clean parquet for downstream analysis.
 """
+import argparse
 import os
 
 import numpy as np
 import pandas as pd
 
-SRC = r"D:\B编程\powerBI\github\datasets\procurement\PURCHASE ORDER DATA EXTRACT 2012-2015_0.csv"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "output")
+DATA_NAME = "PURCHASE ORDER DATA EXTRACT 2012-2015_0.csv"
+# default search path relative to the repo, so no machine-specific absolute path
+DEFAULT_DATA = os.path.join(ROOT, "..", "datasets", "procurement", DATA_NAME)
 os.makedirs(OUT_DIR, exist_ok=True)
 
 # Acquisition-method control classification (initial business rule).
@@ -54,7 +57,18 @@ def parse_amount(x):
 
 
 def main():
-    df = pd.read_csv(SRC, encoding="utf-8")
+    parser = argparse.ArgumentParser(description="Clean the CA procurement extract.")
+    parser.add_argument("--src", default=None,
+                        help=f"Path to the raw CSV (default: {DEFAULT_DATA})")
+    args = parser.parse_args()
+    src = args.src or DEFAULT_DATA
+    if not os.path.isfile(src):
+        raise SystemExit(
+            f"Raw CSV not found at {src}. Pass the correct path with --src "
+            "(e.g. --src datasets/procurement/{DATA_NAME})."
+        )
+
+    df = pd.read_csv(src, encoding="utf-8")
     df["unit_price"] = df["Unit Price"].apply(parse_amount)
     df["total_price"] = df["Total Price"].apply(parse_amount)
     df["quantity"] = pd.to_numeric(df["Quantity"], errors="coerce")
