@@ -30,3 +30,8 @@ ProcurementReconciliation.SemanticModel/
 ProcurementReconciliation.Report/
 data/pbip/
 
+# Power BI build scripts (PBI work kept local — not published)
+scripts/build_hyper.py
+scripts/build_pbip.py
+scripts/export_pbip_csv.py
+scripts/validate_pbip.py
