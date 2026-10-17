@@ -18,3 +18,15 @@ data/raw/
 采购业务背景手册.md
 单价离群检测-方法与目的.md
 
+
+# Local Power BI / Tableau operations guide (kept local)
+OPERATIONS.md
+
+
+# Power BI artifacts (large, kept local — not published to GitHub)
+ProcurementReconciliation.pbip
+ProcurementReconciliation.hyper
+ProcurementReconciliation.SemanticModel/
+ProcurementReconciliation.Report/
+data/pbip/
+

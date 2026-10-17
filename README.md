@@ -1,4 +1,6 @@
 # Procurement & Purchase-Order Reconciliation Analysis
+![CI](https://github.com/JLXYwjw/procurement-reconciliation/actions/workflows/ci.yml/badge.svg)
+
 
 Analysis of a large, real CA statewide procurement extract to surface cost, concentration and control issues, ending in actionable recommendations.
 
@@ -66,3 +68,9 @@ pip install kaggle
 kaggle datasets download -d sohier/large-purchases-by-the-state-of-ca -p data/raw --unzip
 # requires a kaggle.json / KAGGLE_USERNAME + KAGGLE_KEY
 ```
+
+## CI / Quality Gate
+
+Every push or pull request runs a [GitHub Actions](.github/workflows/ci.yml) workflow: a quality gate checks that English docs contain no Chinese, every referenced chart exists, and the bilingual README + index are all present; then `pytest` runs the test suite.
+
+![CI](https://github.com/JLXYwjw/procurement-reconciliation/actions/workflows/ci.yml/badge.svg)

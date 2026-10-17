@@ -1,4 +1,6 @@
 # 采购订单对账与分析（Procurement & Purchase-Order Reconciliation）
+![CI](https://github.com/JLXYwjw/procurement-reconciliation/actions/workflows/ci.yml/badge.svg)
+
 
 > 项目目标：把加州政府一整套真实的采购订单数据清洗、对齐成一张可用的大表，找出**钱都花在哪、是否过度集中、哪些采购在管控之外**，最后给出采购/财务团队能落地的治理与对账建议。
 > 数据：加州政府采购订单提取（约 34.6 万条有效记录，2012–2015，支出合计约 **$151.2B**）。
@@ -81,3 +83,9 @@ python -m pytest tests -q           # 单元 + 报告 + 输出契约测试
 4. 任何单价结论前先建 SKU/市场价**基准**。
 
 — Jiawei Wang
+
+## CI / 质量门
+
+每次 push 或拉取请求都会触发 [GitHub Actions](.github/workflows/ci.yml) 工作流：质量门检查「英文文档不含中文、引用的图表都存在、中英 README 与 index 齐全」，随后运行 `pytest` 测试套件。
+
+![CI](https://github.com/JLXYwjw/procurement-reconciliation/actions/workflows/ci.yml/badge.svg)
