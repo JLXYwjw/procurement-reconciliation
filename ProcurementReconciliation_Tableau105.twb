@@ -1,0 +1,1292 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- 由 build_twb.py 生成 / Tableau 10.5 格式（参照 Tableau 自带 10.5 样例） -->
+<workbook original-version='10.5' source-build='10.5.0 (10500.17.1226.1925)' source-platform='win' version='10.5' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <!-- ★ 关键：smooth 主题。不加就走 classic = 灰底灰框，这是「丑」的头号原因 -->
+  <style-theme name='smooth' />
+  <datasources>
+    <datasource caption='采购明细' inline='true' name='federated.0factdetail' version='10.5'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='tableau_fact_wide.csv' name='textscan.0factdetail'>
+            <connection class='textscan' directory='D:/B编程/powerBI/github/procurement-reconciliation/data/pbip' filename='tableau_fact_wide.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.0factdetail' name='tableau_fact_wide.csv' table='[tableau_fact_wide#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='date' name='creation_date' ordinal='0' />
+            <column datatype='string' name='year_month' ordinal='1' />
+            <column datatype='string' name='fiscal_year' ordinal='2' />
+            <column datatype='string' name='po_number' ordinal='3' />
+            <column datatype='string' name='acquisition_method' ordinal='4' />
+            <column datatype='string' name='method_class' ordinal='5' />
+            <column datatype='string' name='method_class_cn' ordinal='6' />
+            <column datatype='string' name='acquisition_type' ordinal='7' />
+            <column datatype='string' name='department' ordinal='8' />
+            <column datatype='string' name='dept_group' ordinal='9' />
+            <column datatype='string' name='supplier_name' ordinal='10' />
+            <column datatype='real' name='quantity' ordinal='11' />
+            <column datatype='real' name='unit_price' ordinal='12' />
+            <column datatype='real' name='total_price' ordinal='13' />
+            <column datatype='real' name='spend_b' ordinal='14' />
+            <column datatype='integer' name='segment' ordinal='15' />
+            <column datatype='string' name='supplier_tier' ordinal='16' />
+            <column datatype='string' name='tier_cn' ordinal='17' />
+            <column datatype='real' name='supplier_total_spend' ordinal='18' />
+            <column datatype='integer' name='supplier_order_count' ordinal='19' />
+            <column datatype='integer' name='supplier_category_breadth' ordinal='20' />
+            <column datatype='integer' name='supplier_years_active' ordinal='21' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>creation_date</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[creation_date]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>creation_date</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>year_month</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[year_month]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>year_month</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>fiscal_year</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[fiscal_year]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>fiscal_year</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>po_number</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[po_number]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>po_number</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>acquisition_method</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[acquisition_method]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>acquisition_method</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>method_class</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[method_class]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>method_class</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>method_class_cn</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[method_class_cn]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>method_class_cn</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>acquisition_type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[acquisition_type]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>acquisition_type</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>department</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[department]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>department</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>dept_group</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[dept_group]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>dept_group</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[supplier_name]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_name</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>quantity</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[quantity]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>quantity</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>unit_price</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[unit_price]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>unit_price</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>total_price</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[total_price]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>total_price</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>spend_b</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[spend_b]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>spend_b</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>segment</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[segment]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>segment</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_tier</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[supplier_tier]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_tier</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>tier_cn</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[tier_cn]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>tier_cn</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_total_spend</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[supplier_total_spend]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_total_spend</remote-alias>
+            <ordinal>18</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_order_count</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[supplier_order_count]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_order_count</remote-alias>
+            <ordinal>19</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_category_breadth</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[supplier_category_breadth]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_category_breadth</remote-alias>
+            <ordinal>20</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_years_active</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[supplier_years_active]</local-name>
+            <parent-name>[tableau_fact_wide.csv]</parent-name>
+            <remote-alias>supplier_years_active</remote-alias>
+            <ordinal>21</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='创建日期' datatype='date' name='[creation_date]' role='dimension' type='ordinal' />
+      <column caption='年月' datatype='string' name='[year_month]' role='dimension' type='nominal' />
+      <column caption='财年' datatype='string' name='[fiscal_year]' role='dimension' type='nominal' />
+      <column caption='订单号' datatype='string' name='[po_number]' role='dimension' type='nominal' />
+      <column caption='采购方法' datatype='string' name='[acquisition_method]' role='dimension' type='nominal' />
+      <column caption='控制类别' datatype='string' name='[method_class]' role='dimension' type='nominal' />
+      <column caption='控制类别(中)' datatype='string' name='[method_class_cn]' role='dimension' type='nominal' />
+      <column caption='采购类型' datatype='string' name='[acquisition_type]' role='dimension' type='nominal' />
+      <column caption='部门' datatype='string' name='[department]' role='dimension' type='nominal' />
+      <column caption='部门分组' datatype='string' name='[dept_group]' role='dimension' type='nominal' />
+      <column caption='供应商' datatype='string' name='[supplier_name]' role='dimension' type='nominal' />
+      <column caption='数量' datatype='real' name='[quantity]' role='measure' type='quantitative' />
+      <column caption='单价' datatype='real' name='[unit_price]' role='measure' type='quantitative' />
+      <column caption='支出金额' datatype='real' name='[total_price]' role='measure' type='quantitative' />
+      <column caption='支出(十亿)' datatype='real' name='[spend_b]' role='measure' type='quantitative' />
+      <column caption='商品段' datatype='integer' name='[segment]' role='dimension' type='nominal' />
+      <column caption='供应商分层' datatype='string' name='[supplier_tier]' role='dimension' type='nominal' />
+      <column caption='供应商分层(中)' datatype='string' name='[tier_cn]' role='dimension' type='nominal' />
+      <column caption='供应商总支出' datatype='real' name='[supplier_total_spend]' role='measure' type='quantitative' />
+      <column caption='供应商订单数' datatype='integer' name='[supplier_order_count]' role='measure' type='quantitative' />
+      <column caption='品类广度' datatype='integer' name='[supplier_category_breadth]' role='measure' type='quantitative' />
+      <column caption='活跃年数' datatype='integer' name='[supplier_years_active]' role='measure' type='quantitative' />
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='color' field='[none:method_class_cn:nk]' type='palette'>
+              <map to='#2e7d32'>
+                <bucket>&quot;竞争性&quot;</bucket>
+              </map>
+              <map to='#c62828'>
+                <bucket>&quot;豁免&quot;</bucket>
+              </map>
+              <map to='#f9a825'>
+                <bucket>&quot;灵活&quot;</bucket>
+              </map>
+            </encoding>
+          </style-rule>
+        </style>
+    </datasource>
+    <datasource caption='Top500供应商' inline='true' name='federated.0supplier' version='10.5'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='tableau_supplier_top500.csv' name='textscan.0supplier'>
+            <connection class='textscan' directory='D:/B编程/powerBI/github/procurement-reconciliation/data/pbip' filename='tableau_supplier_top500.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.0supplier' name='tableau_supplier_top500.csv' table='[tableau_supplier_top500#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='supplier_name' ordinal='0' />
+            <column datatype='integer' name='supplier_rank' ordinal='1' />
+            <column datatype='real' name='total_spend_b' ordinal='2' />
+            <column datatype='real' name='total_spend' ordinal='3' />
+            <column datatype='integer' name='order_count' ordinal='4' />
+            <column datatype='real' name='avg_order' ordinal='5' />
+            <column datatype='real' name='cum_share_pct' ordinal='6' />
+            <column datatype='integer' name='category_breadth' ordinal='7' />
+            <column datatype='integer' name='years_active' ordinal='8' />
+            <column datatype='string' name='tier_cn' ordinal='9' />
+            <column datatype='integer' name='tier_order' ordinal='10' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[supplier_name]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>supplier_name</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_rank</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[supplier_rank]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>supplier_rank</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>total_spend_b</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[total_spend_b]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>total_spend_b</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>total_spend</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[total_spend]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>total_spend</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>order_count</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[order_count]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>order_count</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>avg_order</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[avg_order]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>avg_order</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>cum_share_pct</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[cum_share_pct]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>cum_share_pct</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>category_breadth</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[category_breadth]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>category_breadth</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>years_active</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[years_active]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>years_active</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>tier_cn</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[tier_cn]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>tier_cn</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>tier_order</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[tier_order]</local-name>
+            <parent-name>[tableau_supplier_top500.csv]</parent-name>
+            <remote-alias>tier_order</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='供应商' datatype='string' name='[supplier_name]' role='dimension' type='nominal' />
+      <column caption='支出排名' datatype='integer' name='[supplier_rank]' role='dimension' type='ordinal' />
+      <column caption='总支出(十亿)' datatype='real' name='[total_spend_b]' role='measure' type='quantitative' />
+      <column caption='总支出' datatype='real' name='[total_spend]' role='measure' type='quantitative' />
+      <column caption='订单数' datatype='integer' name='[order_count]' role='measure' type='quantitative' />
+      <column caption='平均订单金额' datatype='real' name='[avg_order]' role='measure' type='quantitative' />
+      <column caption='累计占比(%)' datatype='real' name='[cum_share_pct]' role='measure' type='quantitative' />
+      <column caption='品类广度' datatype='integer' name='[category_breadth]' role='measure' type='quantitative' />
+      <column caption='活跃年数' datatype='integer' name='[years_active]' role='measure' type='quantitative' />
+      <column caption='供应商分层' datatype='string' name='[tier_cn]' role='dimension' type='nominal' />
+      <column caption='分层排序' datatype='integer' name='[tier_order]' role='dimension' type='ordinal' />
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='color' field='[none:tier_cn:nk]' type='palette'>
+              <map to='#1f4e79'>
+                <bucket>&quot;核心战略&quot;</bucket>
+              </map>
+              <map to='#4a90c2'>
+                <bucket>&quot;常规&quot;</bucket>
+              </map>
+              <map to='#a8c6e5'>
+                <bucket>&quot;长尾&quot;</bucket>
+              </map>
+              <map to='#c62828'>
+                <bucket>&quot;一次性大额&quot;</bucket>
+              </map>
+              <map to='#7f7f7f'>
+                <bucket>&quot;未分层&quot;</bucket>
+              </map>
+            </encoding>
+          </style-rule>
+        </style>
+    </datasource>
+    <datasource caption='Top20供应商' inline='true' name='federated.0top20' version='10.5'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='tableau_top20.csv' name='textscan.0top20'>
+            <connection class='textscan' directory='D:/B编程/powerBI/github/procurement-reconciliation/data/pbip' filename='tableau_top20.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.0top20' name='tableau_top20.csv' table='[tableau_top20#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='supplier_name' ordinal='0' />
+            <column datatype='integer' name='supplier_rank' ordinal='1' />
+            <column datatype='real' name='total_spend_b' ordinal='2' />
+            <column datatype='integer' name='order_count' ordinal='3' />
+            <column datatype='string' name='tier_cn' ordinal='4' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[supplier_name]</local-name>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias>supplier_name</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>supplier_rank</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[supplier_rank]</local-name>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias>supplier_rank</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>total_spend_b</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[total_spend_b]</local-name>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias>total_spend_b</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>order_count</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[order_count]</local-name>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias>order_count</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>tier_cn</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[tier_cn]</local-name>
+            <parent-name>[tableau_top20.csv]</parent-name>
+            <remote-alias>tier_cn</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='供应商' datatype='string' name='[supplier_name]' role='dimension' type='nominal' />
+      <column caption='支出排名' datatype='integer' name='[supplier_rank]' role='dimension' type='ordinal' />
+      <column caption='总支出(十亿)' datatype='real' name='[total_spend_b]' role='measure' type='quantitative' />
+      <column caption='订单数' datatype='integer' name='[order_count]' role='measure' type='quantitative' />
+      <column caption='供应商分层' datatype='string' name='[tier_cn]' role='dimension' type='nominal' />
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='1 月度支出趋势'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>3–6 月支出是淡季的 6.3 倍，预算释放节奏明显</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;36 个月 · 峰值 2013-03 达 $23.3B · 单位：十亿美元</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='采购明细' name='federated.0factdetail' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0factdetail'>
+            <column datatype='string' name='[year_month]' role='dimension' type='nominal' />
+            <column-instance column='[year_month]' derivation='None' name='[none:year_month:nk]' pivot='key' type='nominal' />
+            <column datatype='real' name='[spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[spend_b]' derivation='Sum' name='[sum:spend_b:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0factdetail].[sum:spend_b:qk]' value='*0.0' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+          <style-rule element='axis'>
+            <format attr='title' class='0' scope='rows' value='支出（十亿美元）' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+          </pane>
+        </panes>
+        <rows>[federated.0factdetail].[sum:spend_b:qk]</rows>
+        <cols>[federated.0factdetail].[none:year_month:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='2 部门支出Top15'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>Top15 部门吃掉 92.5% 的支出，医疗一个部门占 66.0%</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;Health Care Services $99.8B · 其余 96 个部门合计仅 7.5%</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='采购明细' name='federated.0factdetail' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0factdetail'>
+            <column datatype='string' name='[dept_group]' role='dimension' type='nominal' />
+            <column-instance column='[dept_group]' derivation='None' name='[none:dept_group:nk]' pivot='key' type='nominal' />
+            <column datatype='real' name='[spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[spend_b]' derivation='Sum' name='[sum:spend_b:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='computed' column='[federated.0factdetail].[none:dept_group:nk]' direction='DESC' using='[federated.0factdetail].[sum:spend_b:qk]' />
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0factdetail].[sum:spend_b:qk]' value='*0.0' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.0factdetail].[sum:spend_b:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='datalabel'>
+                <format attr='font-size' value='9' />
+                <format attr='color' value='#000000' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0factdetail].[none:dept_group:nk]</rows>
+        <cols>[federated.0factdetail].[sum:spend_b:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='3 采购控制结构'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>竞争性采购占 55.7%，但豁免采购仍有 $60.6B（40.1%）</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;豁免=可不经竞争程序直接采购，占比过高是审计高风险信号</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='采购明细' name='federated.0factdetail' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0factdetail'>
+            <column datatype='string' name='[method_class_cn]' role='dimension' type='nominal' />
+            <column-instance column='[method_class_cn]' derivation='None' name='[none:method_class_cn:nk]' pivot='key' type='nominal' />
+            <column datatype='real' name='[spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[spend_b]' derivation='Sum' name='[sum:spend_b:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='computed' column='[federated.0factdetail].[none:method_class_cn:nk]' direction='DESC' using='[federated.0factdetail].[sum:spend_b:qk]' />
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0factdetail].[sum:spend_b:qk]' value='*0.0' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.0factdetail].[none:method_class_cn:nk]' />
+              <text column='[federated.0factdetail].[sum:spend_b:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='datalabel'>
+                <format attr='font-size' value='9' />
+                <format attr='color' value='#000000' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0factdetail].[sum:spend_b:qk]</rows>
+        <cols>[federated.0factdetail].[none:method_class_cn:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='4 Top20供应商'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>Top20 供应商拿走 58.0% 的支出，单家最高 $13.6B</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;24,465 家供应商中，前 0.08% 占掉近六成金额</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Top20供应商' name='federated.0top20' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0top20'>
+            <column datatype='string' name='[supplier_name]' role='dimension' type='nominal' />
+            <column-instance column='[supplier_name]' derivation='None' name='[none:supplier_name:nk]' pivot='key' type='nominal' />
+            <column datatype='real' name='[total_spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[total_spend_b]' derivation='Sum' name='[sum:total_spend_b:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='computed' column='[federated.0top20].[none:supplier_name:nk]' direction='DESC' using='[federated.0top20].[sum:total_spend_b:qk]' />
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0top20].[sum:total_spend_b:qk]' value='*0.00' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.0top20].[sum:total_spend_b:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='datalabel'>
+                <format attr='font-size' value='9' />
+                <format attr='color' value='#000000' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0top20].[none:supplier_name:nk]</rows>
+        <cols>[federated.0top20].[sum:total_spend_b:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='5 供应商分层'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>「一次性大额」合同贡献 68.4% 支出，却只有 4,545 家供应商</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;核心战略 30.6% · 常规 0.9% · 长尾 0.1% —— 支出高度依赖非长期关系</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='采购明细' name='federated.0factdetail' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0factdetail'>
+            <column datatype='string' name='[tier_cn]' role='dimension' type='nominal' />
+            <column-instance column='[tier_cn]' derivation='None' name='[none:tier_cn:nk]' pivot='key' type='nominal' />
+            <column datatype='real' name='[spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[spend_b]' derivation='Sum' name='[sum:spend_b:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='computed' column='[federated.0factdetail].[none:tier_cn:nk]' direction='DESC' using='[federated.0factdetail].[sum:spend_b:qk]' />
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0factdetail].[sum:spend_b:qk]' value='*0.0' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.0factdetail].[none:tier_cn:nk]' />
+              <text column='[federated.0factdetail].[sum:spend_b:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='datalabel'>
+                <format attr='font-size' value='9' />
+                <format attr='color' value='#000000' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0factdetail].[sum:spend_b:qk]</rows>
+        <cols>[federated.0factdetail].[none:tier_cn:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='6 供应商散点'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>500 家供应商覆盖 92.7% 支出，其中 5 家只下过 1 单</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;这 5 家单笔合计 $13.0B · 每点一家供应商 · X=订单数 Y=总支出</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Top500供应商' name='federated.0supplier' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0supplier'>
+            <column datatype='integer' name='[order_count]' role='measure' type='quantitative' />
+            <column-instance column='[order_count]' derivation='Sum' name='[sum:order_count:qk]' pivot='key' type='quantitative' />
+            <column datatype='real' name='[total_spend_b]' role='measure' type='quantitative' />
+            <column-instance column='[total_spend_b]' derivation='Sum' name='[sum:total_spend_b:qk]' pivot='key' type='quantitative' />
+            <column datatype='string' name='[supplier_name]' role='dimension' type='nominal' />
+            <column-instance column='[supplier_name]' derivation='None' name='[none:supplier_name:nk]' pivot='key' type='nominal' />
+            <column datatype='string' name='[tier_cn]' role='dimension' type='nominal' />
+            <column-instance column='[tier_cn]' derivation='None' name='[none:tier_cn:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='pane'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='border-style' scope='rows' value='none' />
+            <format attr='border-style' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='table-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='header-div'>
+            <format attr='line-pattern' scope='rows' value='none' />
+            <format attr='line-pattern' scope='cols' value='none' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0supplier].[sum:total_spend_b:qk]' value='*0.00' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='color' value='#333333' />
+          </style-rule>
+          <style-rule element='field-labels'>
+            <format attr='font-family' value='Microsoft YaHei' />
+          </style-rule>
+          <style-rule element='axis'>
+            <format attr='title' class='0' scope='cols' value='订单数' />
+            <format attr='title' class='0' scope='rows' value='总支出（十亿美元）' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <color column='[federated.0supplier].[none:tier_cn:nk]' />
+              <lod column='[federated.0supplier].[none:supplier_name:nk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.0supplier].[sum:total_spend_b:qk]</rows>
+        <cols>[federated.0supplier].[sum:order_count:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='采购支出分析总览'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='18'>加州州级采购支出分析 · 2012–2015</run>
+            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='10'>&#9;346,018 笔订单 / $151.2B / 24,465 家供应商</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <style />
+      <size maxheight='900' maxwidth='1200' minheight='900' minwidth='1200' />
+      <zones>
+        <zone h='100000' id='1' type='layout-basic' w='100000' x='0' y='0'>
+        <zone h='8000' id='2' type='title' w='100000' x='0' y='0' />
+        <zone h='46000' id='3' name='1 月度支出趋势' show-title='true' w='33333' x='0' y='8000' />
+        <zone h='46000' id='4' name='2 部门支出Top15' show-title='true' w='33333' x='33333' y='8000' />
+        <zone h='46000' id='5' name='4 Top20供应商' show-title='true' w='33334' x='66666' y='8000' />
+        <zone h='46000' id='6' name='3 采购控制结构' show-title='true' w='33333' x='0' y='54000' />
+        <zone h='46000' id='7' name='5 供应商分层' show-title='true' w='33333' x='33333' y='54000' />
+        <zone h='46000' id='8' name='6 供应商散点' show-title='true' w='33334' x='66666' y='54000' />
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+  <windows source-height='30'>
+    <window class='dashboard' maximized='true' name='采购支出分析总览'>
+      <viewpoints>
+        <viewpoint name='1 月度支出趋势' />
+        <viewpoint name='2 部门支出Top15' />
+        <viewpoint name='3 采购控制结构' />
+        <viewpoint name='4 Top20供应商' />
+        <viewpoint name='5 供应商分层' />
+        <viewpoint name='6 供应商散点' />
+      </viewpoints>
+      <active id='-1' />
+    </window>
+    <window class='worksheet' name='1 月度支出趋势'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='2 部门支出Top15'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='3 采购控制结构'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='4 Top20供应商'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='5 供应商分层'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='6 供应商散点'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+  </windows>
+</workbook>
