@@ -2,7 +2,7 @@
 """
 采购数据清洗 —— 基础可读版（clean_data_simple.py）
 =================================================
-这个文件做的事，和原版 clean_data.py 完全一样：
+
   1. 读入加州采购的原始 CSV（约 90.9 万物理行）
   2. 把"钱"、"日期"、"数量"这些字段从文本变成真正的数值
   3. 从脏数据里抠出邮编、品类段、采购方式分类这三个派生字段
@@ -11,8 +11,24 @@
 区别只是：本文件故意用"最朴素的写法"（for 循环、if 判断、普通函数），
 每一步都写清楚了在做什么、为什么，方便你从头读懂。
 
-运行方式（和原版一样）：
+运行方式：
     python scripts/clean_data_simple.py [--src 原始CSV路径]
+
+English:
+Procurement data cleaning (plain, readable version).
+
+Steps:
+  1. Read the raw California procurement CSV (~909k physical rows)
+  2. Convert money / date / quantity fields from text into real numeric types
+  3. Extract three derived fields from the dirty data: zip code,
+     category segment, and procurement-method classification
+  4. Keep the needed columns and save one clean parquet table
+
+The code uses the plainest style on purpose (for-loops, if-statements,
+ordinary functions); every step states what it does and why.
+
+Run:
+    python scripts/clean_data_simple.py [--src raw-CSV path]
 """
 
 import argparse
@@ -187,7 +203,7 @@ def main():
     df["method_class"] = method_list
 
     # ---- 4.8 挑出我们要用的列，并改成好读的英文列名 ----
-    # 原版列名有的太长、有的有空格，统一改成下划线小写，方便后面脚本用。
+    # 列名有的太长、有的有空格，统一改成下划线小写，方便后面脚本用。
     old_names = [
         "creation_date", "purchase_date", "Fiscal Year",
         "Purchase Order Number", "Requisition Number",

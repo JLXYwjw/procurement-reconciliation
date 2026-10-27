@@ -1,12 +1,11 @@
 <?xml version='1.0' encoding='utf-8' ?>
 
-<!-- 由 build_twb.py 生成 / Tableau 10.5 格式（参照 Tableau 自带 10.5 样例） -->
+<!-- 由 build_twb_simple.py 生成 / Tableau 10.5 格式 -->
 <workbook original-version='10.5' source-build='10.5.0 (10500.17.1226.1925)' source-platform='win' version='10.5' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
     <preference name='ui.shelf.height' value='26' />
   </preferences>
-  <!-- ★ 关键：smooth 主题。不加就走 classic = 灰底灰框，这是「丑」的头号原因 -->
   <style-theme name='smooth' />
   <datasources>
     <datasource caption='采购明细' inline='true' name='federated.0factdetail' version='10.5'>
@@ -365,13 +364,13 @@
         <style>
           <style-rule element='mark'>
             <encoding attr='color' field='[none:method_class_cn:nk]' type='palette'>
-              <map to='#2e7d32'>
+              <map to='#1f3a5f'>
                 <bucket>&quot;竞争性&quot;</bucket>
               </map>
-              <map to='#c62828'>
+              <map to='#a8322a'>
                 <bucket>&quot;豁免&quot;</bucket>
               </map>
-              <map to='#f9a825'>
+              <map to='#9db4cc'>
                 <bucket>&quot;灵活&quot;</bucket>
               </map>
             </encoding>
@@ -561,19 +560,19 @@
         <style>
           <style-rule element='mark'>
             <encoding attr='color' field='[none:tier_cn:nk]' type='palette'>
-              <map to='#1f4e79'>
-                <bucket>&quot;核心战略&quot;</bucket>
-              </map>
-              <map to='#4a90c2'>
-                <bucket>&quot;常规&quot;</bucket>
-              </map>
-              <map to='#a8c6e5'>
-                <bucket>&quot;长尾&quot;</bucket>
-              </map>
-              <map to='#c62828'>
+              <map to='#a8322a'>
                 <bucket>&quot;一次性大额&quot;</bucket>
               </map>
-              <map to='#7f7f7f'>
+              <map to='#1f3a5f'>
+                <bucket>&quot;核心战略&quot;</bucket>
+              </map>
+              <map to='#3e6e9e'>
+                <bucket>&quot;常规&quot;</bucket>
+              </map>
+              <map to='#9db4cc'>
+                <bucket>&quot;长尾&quot;</bucket>
+              </map>
+              <map to='#8a94a6'>
                 <bucket>&quot;未分层&quot;</bucket>
               </map>
             </encoding>
@@ -689,8 +688,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>3–6 月支出是淡季的 6.3 倍，预算释放节奏明显</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;36 个月 · 峰值 2013-03 达 $23.3B · 单位：十亿美元</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>3–6 月是淡季的 6.3 倍</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -730,13 +728,13 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
           </style-rule>
           <style-rule element='axis'>
-            <format attr='title' class='0' scope='rows' value='支出（十亿美元）' />
+            <format attr='title' class='0' scope='rows' value='十亿美元' />
           </style-rule>
         </style>
         <panes>
@@ -755,8 +753,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>Top15 部门吃掉 92.5% 的支出，医疗一个部门占 66.0%</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;Health Care Services $99.8B · 其余 96 个部门合计仅 7.5%</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>医疗一个部门占 66.0%</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -797,7 +794,7 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
@@ -814,8 +811,8 @@
             </encodings>
             <style>
               <style-rule element='datalabel'>
-                <format attr='font-size' value='9' />
-                <format attr='color' value='#000000' />
+                <format attr='font-size' value='10' />
+                <format attr='color' value='#1f2937' />
               </style-rule>
               <style-rule element='mark'>
                 <format attr='mark-labels-show' value='true' />
@@ -832,8 +829,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>竞争性采购占 55.7%，但豁免采购仍有 $60.6B（40.1%）</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;豁免=可不经竞争程序直接采购，占比过高是审计高风险信号</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>豁免采购仍占 40.1%</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -874,7 +870,7 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
@@ -892,8 +888,8 @@
             </encodings>
             <style>
               <style-rule element='datalabel'>
-                <format attr='font-size' value='9' />
-                <format attr='color' value='#000000' />
+                <format attr='font-size' value='10' />
+                <format attr='color' value='#1f2937' />
               </style-rule>
               <style-rule element='mark'>
                 <format attr='mark-labels-show' value='true' />
@@ -910,8 +906,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>Top20 供应商拿走 58.0% 的支出，单家最高 $13.6B</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;24,465 家供应商中，前 0.08% 占掉近六成金额</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>Top20 拿走 58.0%</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -952,7 +947,7 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
@@ -969,8 +964,8 @@
             </encodings>
             <style>
               <style-rule element='datalabel'>
-                <format attr='font-size' value='9' />
-                <format attr='color' value='#000000' />
+                <format attr='font-size' value='10' />
+                <format attr='color' value='#1f2937' />
               </style-rule>
               <style-rule element='mark'>
                 <format attr='mark-labels-show' value='true' />
@@ -987,8 +982,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>「一次性大额」合同贡献 68.4% 支出，却只有 4,545 家供应商</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;核心战略 30.6% · 常规 0.9% · 长尾 0.1% —— 支出高度依赖非长期关系</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>一次性大额占 68.4%</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1029,7 +1023,7 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
@@ -1047,8 +1041,8 @@
             </encodings>
             <style>
               <style-rule element='datalabel'>
-                <format attr='font-size' value='9' />
-                <format attr='color' value='#000000' />
+                <format attr='font-size' value='10' />
+                <format attr='color' value='#1f2937' />
               </style-rule>
               <style-rule element='mark'>
                 <format attr='mark-labels-show' value='true' />
@@ -1065,8 +1059,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='15'>500 家供应商覆盖 92.7% 支出，其中 5 家只下过 1 单</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='9'>&#10;这 5 家单笔合计 $13.0B · 每点一家供应商 · X=订单数 Y=总支出</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='12'>500 家覆盖 92.7%</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1110,14 +1103,14 @@
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='rows' value='false' />
             <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='color' value='#333333' />
+            <format attr='color' value='#1f2937' />
           </style-rule>
           <style-rule element='field-labels'>
             <format attr='font-family' value='Microsoft YaHei' />
           </style-rule>
           <style-rule element='axis'>
             <format attr='title' class='0' scope='cols' value='订单数' />
-            <format attr='title' class='0' scope='rows' value='总支出（十亿美元）' />
+            <format attr='title' class='0' scope='rows' value='十亿美元' />
           </style-rule>
         </style>
         <panes>
@@ -1142,8 +1135,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold='true' fontcolor='#1f4e79' fontname='Microsoft YaHei' fontsize='18'>加州州级采购支出分析 · 2012–2015</run>
-            <run fontcolor='#7f7f7f' fontname='Microsoft YaHei' fontsize='10'>&#9;346,018 笔订单 / $151.2B / 24,465 家供应商</run>
+            <run bold='true' fontcolor='#1f3a5f' fontname='Microsoft YaHei' fontsize='16'>采购支出分析 2012–2015</run>
           </formatted-text>
         </title>
       </layout-options>

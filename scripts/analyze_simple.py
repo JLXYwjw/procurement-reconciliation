@@ -2,7 +2,7 @@
 """
 业务指标分析 —— 基础可读版（analyze_simple.py）
 =================================================
-这个文件做的事，和原版 analyze.py 完全一样：
+
   1. 读入清洗好的采购明细表（procurement_clean.parquet）
   2. 回答第一批业务问题：总共花了多少钱、钱集中在谁身上
      （Top10 占比、CR4、CR8、HHI）
@@ -11,7 +11,22 @@
 区别只是：本文件故意用最朴素的写法（for 循环、if 判断、普通函数），
 每一步都写清楚了在做什么、为什么。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/analyze_simple.py
+
+English:
+Business-metric analysis (plain, readable version).
+
+Steps:
+  1. Read the cleaned procurement table (procurement_clean.parquet)
+  2. Answer the first batch of business questions: how much was spent in
+     total, and how concentrated the spend is (Top-10 share, CR4, CR8, HHI)
+  3. Summarize spend by procurement method and by fiscal year
+
+The code uses the plainest style on purpose (for-loops, if-statements,
+ordinary functions) and every step states what it does and why.
+
+Run:
     python scripts/analyze_simple.py
 """
 

@@ -2,7 +2,7 @@
 """
 供应商分层标签工具 —— 基础可读版（segment_utils_simple.py）
 =========================================================
-这个文件做的事，和原版 segment_utils.py 完全一样：
+
   把聚类后的供应商按业务含义分成 4 层：
     - core_strategic（核心战略）：重复采购（活跃年数 >= 2）且支出最高的聚类
     - oneoff_large（一次性大额）：单年大额支出的聚类
@@ -12,6 +12,20 @@
 这个文件只依赖 pandas，可以独立单元测试，不需要跑全量数据。
 
 运行方式：本文件是工具模块，被 supplier_cluster_simple.py 导入使用。
+
+English:
+Supplier-segmentation labeling utility (plain, readable version).
+
+Maps clustered suppliers to 4 business layers:
+  - core_strategic: repeat buyers (active >= 2 years) with the highest spend
+  - oneoff_large: single-year large spend
+  - regular: remaining suppliers by spend, upper part
+  - tail: remaining suppliers by spend, lower part
+
+Depends only on pandas, so it can be unit-tested standalone without the
+full dataset.
+
+Run: this is a utility module, imported by supplier_cluster_simple.py.
 """
 
 import pandas as pd
@@ -87,7 +101,7 @@ def label_tiers(prof):
         names[oneoff_c] = "oneoff_large"
 
     # rest 里第一个叫 regular，第二个叫 tail
-    # （原版是 ["regular", "tail"][i]，这里改成 if 判断，更直观）
+    # （用 if 判断区分 regular / tail，更直观）
     for i, c in enumerate(rest):
         if i == 0:
             names[c] = "regular"

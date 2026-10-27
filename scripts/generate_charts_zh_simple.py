@@ -2,11 +2,21 @@
 """
 采购报告图表生成（中文版） —— 基础可读版（generate_charts_zh_simple.py）
 =====================================================================
-这个文件做的事，和原版 generate_charts_zh.py 完全一样：
+
   和英文版用同一份数据，生成中文版图表，输出 assets/*_zh.png，
   供中文 README 和中文网页使用。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/generate_charts_zh_simple.py
+
+English:
+Procurement report charts, Chinese labels (plain, readable version).
+
+Uses the same data as the English version but produces Chinese-labeled
+charts, written to assets/*_zh.png for the Chinese README and the Chinese
+web page.
+
+Run:
     python scripts/generate_charts_zh_simple.py
 """
 

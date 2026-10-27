@@ -2,7 +2,7 @@
 """
 扩展业务指标分析 —— 基础可读版（analyze_extended_simple.py）
 ===========================================================
-这个文件做的事，和原版 analyze_extended.py 完全一样：
+
   1. 部门支出排名（Top12）
   2. 邮编/地点支出排名（Top10）
   3. UNSPSC 品类段支出排名（Top12）
@@ -12,7 +12,24 @@
 
 区别只是：本文件故意用最朴素的写法，每一步都写清楚了在做什么。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/analyze_extended_simple.py
+
+English:
+Extended business-metric analysis (plain, readable version).
+
+Steps:
+  1. Top-12 spend ranking by department
+  2. Top-10 spend ranking by postal code / location
+  3. Top-12 spend ranking by UNSPSC category segment
+  4. Monthly spend trend
+  5. Procurement-method control view (competitive / exempt / flexible)
+  6. Control-card (cal_card) share check
+
+The code is deliberately written in the simplest style so that every step
+clearly shows what it does.
+
+Run:
     python scripts/analyze_extended_simple.py
 """
 
@@ -54,7 +71,7 @@ print("LOCATIONS_WITH_VALUE", zip_present, "of", len(df))
 # ------------------------------------------------------------------
 # 4. UNSPSC 品类段支出排名（Top12）
 # ------------------------------------------------------------------
-# 原版用 .astype("Int64").astype(str).str[:2] 链式操作取前2位，
+# 用 .astype("Int64").astype(str).str[:2] 链式操作也能取前 2 位，
 # 这里改成逐行 for 循环，先处理缺失值，再取前两位。
 print("\n===== UNSPSC (top 12 by spend) =====")
 

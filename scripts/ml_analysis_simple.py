@@ -2,7 +2,7 @@
 """
 机器学习分析 —— 基础可读版（ml_analysis_simple.py）
 =================================================
-这个文件做的事，和原版 ml_analysis.py 完全一样：
+
   1. 采购类型分布统计
   2. 货物单价异常检测（只在可比的货物类采购上做，按 UNSPSC 品类段分组，
      用 MAD 稳健规则标记异常行）
@@ -15,7 +15,27 @@ v2 的设计思路（v1 的教训）：
   只有货物类（quantity >= 2）、同一品类段内，单价偏离中位数太远才算异常。
   服务类合同（quantity=1，价格=总价）不参与比较，因为不可比。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/ml_analysis_simple.py
+
+English:
+Machine-learning analysis (plain, readable version).
+
+Steps:
+  1. Procurement-type distribution statistics
+  2. Unit-cost anomaly detection - only on comparable goods, grouped by
+     UNSPSC category segment, using a robust MAD rule
+  3. Flexible-method procurement list (for process review)
+  4. Results saved as goods_anomaly.parquet and flexible_review.parquet
+
+v2 design rationale (lesson from v1): v1 treated "large total spend" as an
+anomaly feature and flagged 83% of medical contracts as anomalies - large
+and legitimate. v2 only detects anomalies on comparable unit prices:
+goods (quantity >= 2) within the same segment whose unit cost deviates too
+far from the median. Service contracts (quantity = 1, price = total) are
+excluded because they are not comparable.
+
+Run:
     python scripts/ml_analysis_simple.py
 """
 
@@ -57,7 +77,7 @@ goods["unit_cost"] = goods["total_price"] / goods["quantity"]
 goods = goods[goods["unit_cost"] > 0].copy()
 
 # ---- 3.2 区分货物 vs 服务 ----
-# 原版用 .str.contains("Good", case=False, na=False) 链式操作，
+# 用 .str.contains("Good", case=False, na=False) 链式操作也行，
 # 这里改成逐行判断：acquisition_type 里是否包含 "Good"（不区分大小写）
 is_goods_list = []
 for atype in goods["acquisition_type"]:
@@ -76,7 +96,7 @@ gg = goods[goods["is_goods"] & (goods["quantity"] >= 2)].copy()
 
 # ---- 3.4 按品类段计算 MAD（中位数绝对偏差） ----
 # MAD = 中位数(|x - 中位数(x)|)，是比标准差更稳健的异常检测指标
-# 原版用 lambda 一行算，这里改成普通函数
+# 用 lambda 也能一行算，这里改成普通函数
 def calc_mad(series):
     """计算一组数的 MAD（中位数绝对偏差）。"""
     med = series.median()
@@ -142,7 +162,7 @@ print(fm.head(10).to_string())
 # ------------------------------------------------------------------
 # 5. 保存结果
 # ------------------------------------------------------------------
-# 注意：供应商分层（segmentation）由 supplier_cluster.py 负责，
+# 注意：供应商分层（segmentation）由 supplier_cluster_simple.py 负责，
 # 这里不重复生成，避免覆盖 v2 的结果。
 gg.to_parquet(os.path.join(OUT_DIR, "goods_anomaly.parquet"), index=False)
 flex.to_parquet(os.path.join(OUT_DIR, "flexible_review.parquet"), index=False)

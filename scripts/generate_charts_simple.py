@@ -2,13 +2,25 @@
 """
 采购报告图表生成（英文版） —— 基础可读版（generate_charts_simple.py）
 =====================================================================
-这个文件做的事，和原版 generate_charts.py 完全一样：
+
   读入清洗后的采购数据和供应商分层结果，生成 8 张 PNG 图表，
   存到 assets/ 目录，供 HTML 报告嵌入。
 
 每张图回答一个业务问题，标签全英文（面向招聘经理和采购方干系人）。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/generate_charts_simple.py
+
+English:
+Procurement report charts, English labels (plain, readable version).
+
+Reads the cleaned procurement data and the supplier-segmentation result,
+generates 8 PNG charts into assets/ for embedding in the HTML report.
+
+Each chart answers one business question; labels are all English
+(targeting hiring managers and procurement stakeholders).
+
+Run:
     python scripts/generate_charts_simple.py
 """
 
@@ -87,7 +99,7 @@ g = g / 1e9
 
 fig, ax = plt.subplots(figsize=(9, 4.4))
 
-# 前3名用深色，其余用浅色（原版用列表推导式，这里改成 for 循环）
+# 前3名用深色，其余用浅色（用 for 循环给每根柱子上色）
 colors = []
 for i in range(len(g)):
     if i < 3:
@@ -300,7 +312,7 @@ save_fig(fig, "healthcare_concentration.png")
 # ------------------------------------------------------------------
 # 9. 分层 × 采购方式 堆叠条形图
 # ------------------------------------------------------------------
-# 原版说明：异常检测图已移除（MAD 标记率26%不可靠），goods_anomaly.parquet 保留作为可复现证据
+# 说明：异常检测图已移除（MAD 标记率26%不可靠），goods_anomaly.parquet 保留作为可复现证据
 dfm = df.merge(sup[["supplier_name", "tier"]], on="supplier_name", how="left")
 
 tiers = ["core_strategic", "oneoff_large", "regular", "tail"]

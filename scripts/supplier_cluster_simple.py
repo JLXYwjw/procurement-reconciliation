@@ -2,7 +2,7 @@
 """
 供应商分层聚类 v2 —— 基础可读版（supplier_cluster_simple.py）
 ===========================================================
-这个文件做的事，和原版 supplier_cluster.py 完全一样：
+
   1. 给每个供应商构建"业务特征"：总支出、平均订单、下单频率、活跃年数、
      品类集中度、部门依赖度
   2. 用 KMeans 聚类（k=4），把供应商分成 4 类
@@ -16,7 +16,31 @@
   和"集中度"（品类、部门）这些"按支出排序看不到"的特征，
   让聚类真正区分出"大额但只来一次"和"中等但长期合作"的供应商。
 
-运行方式（和原版一样）：
+运行方式：
+    python scripts/supplier_cluster_simple.py
+
+English:
+Supplier segmentation clustering v2 (plain, readable version).
+
+Steps:
+  1. Build business features per supplier: total spend, average order,
+     order frequency, active years, category concentration, department
+     dependence
+  2. Cluster with KMeans (k=4)
+  3. Label each cluster by business meaning: core-strategic / one-off
+     large / regular / tail
+  4. Verify that the "core" cluster is not simply "top-N by spend"
+     (the v1 problem was that clustering reduced to sorting by spend)
+  5. Save supplier_segmentation.parquet
+
+Why v2 is designed this way: v1's lesson is that using only "scale"
+features makes KMeans equivalent to "sort by total spend and take the
+top-N" - clustering adds no information. v2 deliberately adds "stickiness"
+(active years, order frequency) and "concentration" (category, department)
+features that sorting by spend cannot see, so clustering truly separates
+"large but one-time" suppliers from "medium but long-term" ones.
+
+Run:
     python scripts/supplier_cluster_simple.py
 """
 
@@ -138,7 +162,7 @@ for k in range(2, 7):
     score = float(silhouette_score(X_scaled, labels))
     sil_scores[k] = score
 
-# 打印轮廓系数（原版用字典推导式，这里改成逐行打印）
+# 打印轮廓系数（用字典逐行记录）
 print("SILHOUETTE", end=" ")
 sil_dict = {}
 for k, v in sil_scores.items():
@@ -195,7 +219,7 @@ print("CORE_SIZE", len(core_suppliers),
       "top10", overlap10,
       "top20", overlap20)
 
-# 前20名里有多少是核心类的（原版用列表推导式，这里改成 for 循环）
+# 前20名里有多少是核心类的（用 for 循环统计）
 top20_core = []
 for name in g.head(20).index:
     if name in core_suppliers:

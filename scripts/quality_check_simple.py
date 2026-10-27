@@ -2,7 +2,7 @@
 """
 仓库质量门禁 —— 基础可读版（quality_check_simple.py）
 =====================================================
-这个文件做的事，和原版 quality_check.py 完全一样：
+
   1. 英文命名的 .md / .html 文档不能含中文字符
   2. 中文命名的文档（.zh-CN 后缀或文件名含中文）必须有中文内容
   3. README / index 引用的每个图片资源都必须真实存在
@@ -10,8 +10,23 @@
 
 通过时退出码 0，有问题时退出码 1。
 
-运行方式（和原版一样）：
+运行方式：
     python scripts/quality_check_simple.py [项目根目录]
+
+English:
+Repository quality gate (plain, readable version).
+
+Checks:
+  1. English-named .md / .html documents must not contain CJK characters
+  2. Chinese-named documents (.zh-CN suffix or Chinese in the filename)
+     must contain Chinese content
+  3. Every image referenced by README / index must actually exist
+  4. Bilingual README and index must all be present
+
+Exit code 0 on pass, 1 on failure.
+
+Run:
+    python scripts/quality_check_simple.py [project root]
 """
 
 import re
