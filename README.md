@@ -28,12 +28,12 @@ Open **`index.html`** in a browser for the full report (business objective → c
 ## Run
 ```bash
 pip install -r requirements.txt
-python scripts/clean_data.py      # raw CSV -> data/output/procurement_clean.parquet
-python scripts/analyze.py         # headline metrics (CR4/CR8, top-10, HHI)
-python scripts/analyze_extended.py# department / category / monthly trend
-python scripts/supplier_cluster.py# KMeans supplier segmentation -> output/supplier_segmentation.parquet
-python scripts/ml_analysis.py     # flexible/exempt review lists -> output/*.parquet
-python scripts/generate_charts.py # charts -> assets/*.png
+python scripts/clean_data_simple.py      # raw CSV -> data/output/procurement_clean.parquet
+python scripts/analyze_simple.py         # headline metrics (CR4/CR8, top-10, HHI)
+python scripts/analyze_extended_simple.py# department / category / monthly trend
+python scripts/supplier_cluster_simple.py# KMeans supplier segmentation -> output/supplier_segmentation.parquet
+python scripts/ml_analysis_simple.py     # flexible/exempt review lists -> output/*.parquet
+python scripts/generate_charts_simple.py # charts -> assets/*.png
 python -m pytest tests -q         # unit + report + output contract tests
 ```
 

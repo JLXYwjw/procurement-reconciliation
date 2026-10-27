@@ -66,12 +66,12 @@ kaggle datasets download -d sohier/large-purchases-by-the-state-of-ca -p data/ra
 
 ```bash
 pip install -r requirements.txt
-python scripts/clean_data.py        # 原始 CSV -> output/procurement_clean.parquet
-python scripts/analyze.py           # 总览指标（CR4/CR8、top-10、HHI）
-python scripts/analyze_extended.py  # 部门 / 品类 / 月度趋势
-python scripts/supplier_cluster.py  # KMeans 供应商分层
-python scripts/ml_analysis.py       # 灵活/豁免复核清单
-python scripts/generate_charts.py   # 图表 -> assets/*.png
+python scripts/clean_data_simple.py        # 原始 CSV -> output/procurement_clean.parquet
+python scripts/analyze_simple.py           # 总览指标（CR4/CR8、top-10、HHI）
+python scripts/analyze_extended_simple.py  # 部门 / 品类 / 月度趋势
+python scripts/supplier_cluster_simple.py  # KMeans 供应商分层
+python scripts/ml_analysis_simple.py       # 灵活/豁免复核清单
+python scripts/generate_charts_simple.py   # 图表 -> assets/*.png
 python -m pytest tests -q           # 单元 + 报告 + 输出契约测试
 ```
 

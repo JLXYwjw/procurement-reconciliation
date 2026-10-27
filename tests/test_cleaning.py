@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pandas as pd
 
-import clean_data as cd
+import clean_data_simple as cd
 
 
 def test_parse_amount_basic():
@@ -34,8 +34,8 @@ def test_parse_amount_zero():
 
 def test_method_class_covers_all_expected():
     # every acquisition method listed must resolve to a control class
-    for method in cd.METHOD_CLASS_LOOKUP:
-        assert method in cd.METHOD_CLASS_LOOKUP
+    for method in cd.method_class_lookup:
+        assert method in cd.method_class_lookup
 
 
 def test_method_class_buckets_nonempty():

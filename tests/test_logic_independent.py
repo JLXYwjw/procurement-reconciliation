@@ -8,8 +8,8 @@ when the git-excluded parquet files are absent.)
 import numpy as np
 import pandas as pd
 
-from clean_data import METHOD_CLASS_LOOKUP, parse_amount
-from segment_utils import label_tiers
+from clean_data_simple import method_class_lookup, parse_amount
+from segment_utils_simple import label_tiers
 
 
 def test_parse_amount_handles_currency_strings():
@@ -21,11 +21,11 @@ def test_parse_amount_handles_currency_strings():
 
 
 def test_method_class_mapping_covers_known_methods():
-    assert METHOD_CLASS_LOOKUP["Formal Competitive"] == "competitive"
-    assert METHOD_CLASS_LOOKUP["Statewide Contract"] == "competitive"
-    assert METHOD_CLASS_LOOKUP["Services are specifically exempt by statute"] == "exempt"
-    assert METHOD_CLASS_LOOKUP["Emergency Purchase"] == "flexible"
-    assert METHOD_CLASS_LOOKUP["Statement of Qualifications"] == "flexible"
+    assert method_class_lookup["Formal Competitive"] == "competitive"
+    assert method_class_lookup["Statewide Contract"] == "competitive"
+    assert method_class_lookup["Services are specifically exempt by statute"] == "exempt"
+    assert method_class_lookup["Emergency Purchase"] == "flexible"
+    assert method_class_lookup["Statement of Qualifications"] == "flexible"
 
 
 def test_label_tiers_marks_recurring_highspend_as_core():
