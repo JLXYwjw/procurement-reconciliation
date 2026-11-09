@@ -131,18 +131,16 @@ save_fig(fig, "top10_suppliers.png")
 dep = df.groupby("department")["total_price"].sum().sort_values(ascending=False).head(10)
 dep_share = dep / grand
 
-fig, ax = plt.subplots(figsize=(9, 4.6))
+fig, ax = plt.subplots(figsize=(10.4, 4.6))
 labels = dep.index[::-1]
 vals = dep.values[::-1] / 1e9
 
-# 去掉部门名里的"Department of "前缀，太长的截断
+# Strip the "Department of " prefix but keep the full name: the figure width
+# and bbox_inches="tight" handle the length, so no characters are cut off.
 short_labels = []
 for n in labels:
     n2 = n.replace("Department of ", "").replace(", Department of", "")
-    if len(n2) <= 26:
-        short_labels.append(n2)
-    else:
-        short_labels.append(n2[:25] + "…")
+    short_labels.append(n2)
 
 # 占比 > 10% 的部门用深色
 bar_colors = []
@@ -154,7 +152,7 @@ for s in dep_share.values[::-1]:
 
 ax.barh(range(len(labels)), vals, color=bar_colors)
 ax.set_yticks(range(len(labels)))
-ax.set_yticklabels(short_labels, fontsize=9)
+ax.set_yticklabels(short_labels, fontsize=8)
 ax.set_title("Spend by Department ($B)", fontsize=12, fontweight="bold")
 ax.set_xlabel("Spend ($B)")
 
@@ -291,6 +289,8 @@ for i, t in enumerate(tier_order):
 ax.set_title("Supplier Segmentation — 68.8% of spend is one-off/large, 30.1% recurring core",
              fontsize=11, fontweight="bold")
 ax.set_xlabel("Spend ($B)")
+# Leave room on the right so the longest bar's label does not touch the edge
+ax.set_xlim(0, tier["spend"].max() * 1.32)
 ax.grid(axis="x", alpha=0.3, lw=0.5)
 save_fig(fig, "supplier_tier.png")
 
@@ -326,18 +326,30 @@ fig, ax = plt.subplots(figsize=(9, 4.2))
 bottom = np.zeros(len(tiers))
 colors_m = {"competitive": GREEN, "exempt": GREY, "flexible": ORANGE}
 
+# Remember where the "exempt" layer starts: each tier's grey block sits at a
+# different height, so a hard-coded y would push some labels outside the block.
+exempt_bottom = np.zeros(len(tiers))
+
 for c in classes:
     vals = sh[c].values
     ax.bar(tiers, vals, bottom=bottom, color=colors_m[c], label=c)
+    if c == "exempt":
+        # bottom is not yet accumulated here, so it is the grey block's start
+        exempt_bottom = bottom.copy()
     bottom = bottom + vals
 
-# 在中间标注"豁免"占比
+# Label the exempt share at the centre of each grey block
 for i, t in enumerate(tiers):
     pct = sh["exempt"][t] * 100
-    ax.text(i, 0.55, f"exempt {pct:.0f}%", ha="center", va="center",
+    exempt_share = sh["exempt"][t]
+    mid = exempt_bottom[i] + exempt_share / 2
+    ax.text(i, mid, f"exempt {pct:.0f}%", ha="center", va="center",
             fontsize=9, fontweight="bold")
 
-ax.set_title("Method control share by tier — exempt concentrates in recurring core, not one-off",
+# Leave headroom so the legend does not cover the tallest bars
+ax.set_ylim(0, 1.06)
+
+ax.set_title("Method control share by tier\n(exempt concentrates in the recurring core, not one-off)",
              fontsize=10.5, fontweight="bold")
 ax.legend(fontsize=8)
 ax.set_ylabel("Share of tier spend")

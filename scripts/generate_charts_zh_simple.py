@@ -121,17 +121,16 @@ save_fig(fig, "top10_suppliers_zh.png")
 dep = df.groupby("department")["total_price"].sum().sort_values(ascending=False).head(10)
 dep_share = dep / grand
 
-fig, ax = plt.subplots(figsize=(9, 4.6))
+fig, ax = plt.subplots(figsize=(10.4, 4.6))
 labels = dep.index[::-1]
 vals = dep.values[::-1] / 1e9
 
 short_labels = []
 for n in labels:
     n2 = n.replace("Department of ", "").replace(", Department of", "")
-    if len(n2) <= 26:
-        short_labels.append(n2)
-    else:
-        short_labels.append(n2[:25] + "…")
+    # 保留完整部门名：靠 figsize 宽度 + bbox_inches="tight" 容纳，
+    # 不做字符截断（截断后的 "Corrections and Rehabilit…" 读不出是哪个部门）。
+    short_labels.append(n2)
 
 bar_colors = []
 for s in dep_share.values[::-1]:
@@ -142,7 +141,7 @@ for s in dep_share.values[::-1]:
 
 ax.barh(range(len(labels)), vals, color=bar_colors)
 ax.set_yticks(range(len(labels)))
-ax.set_yticklabels(short_labels, fontsize=9)
+ax.set_yticklabels(short_labels, fontsize=8)
 ax.set_title("各部门支出（$B）", fontsize=12, fontweight="bold")
 ax.set_xlabel("支出（$B）")
 
@@ -276,6 +275,8 @@ for i, t in enumerate(tier_order):
 ax.set_title("供应商分层 —— 68.8% 支出来自一次性/大额，30.1% 为长期核心",
              fontsize=11, fontweight="bold")
 ax.set_xlabel("支出（$B）")
+# 右侧留出空白，避免最长那根柱子的标签（$104.1B · 4,583 家 · 68.8%）贴到图片边缘
+ax.set_xlim(0, tier["spend"].max() * 1.32)
 ax.grid(axis="x", alpha=0.3, lw=0.5)
 save_fig(fig, "supplier_tier_zh.png")
 
@@ -310,15 +311,28 @@ bottom = np.zeros(len(tiers))
 colors_m = {"competitive": GREEN, "exempt": GREY, "flexible": ORANGE}
 legend_names = {"competitive": "竞争", "exempt": "豁免", "flexible": "灵活"}
 
+# 记录"豁免"这一层的底边位置：每个分层的灰块起止高度都不一样，
+# 只有拿到起点才能把文字放到灰块正中（而不是写死一个固定高度）。
+exempt_bottom = np.zeros(len(tiers))
+
 for c in classes:
     vals = sh[c].values
     ax.bar(tiers, vals, bottom=bottom, color=colors_m[c], label=legend_names[c])
+    if c == "exempt":
+        # 这一层刚画完、bottom 还没被累加，此时它就是灰块的起点
+        exempt_bottom = bottom.copy()
     bottom = bottom + vals
 
 for i, t in enumerate(tiers):
     pct = sh["exempt"][t] * 100
-    ax.text(i, 0.55, f"豁免 {pct:.0f}%", ha="center", va="center",
+    # 灰块中点 = 起点 + 该层高度的一半
+    exempt_share = sh["exempt"][t]
+    mid = exempt_bottom[i] + exempt_share / 2
+    ax.text(i, mid, f"豁免 {pct:.0f}%", ha="center", va="center",
             fontsize=9, fontweight="bold")
+
+# 顶部留一点空间，避免图例压住最高的柱顶
+ax.set_ylim(0, 1.06)
 
 ax.set_title("各分层采购方式占比 —— 豁免集中于长期核心，而非一次性/大额",
              fontsize=10.5, fontweight="bold")
