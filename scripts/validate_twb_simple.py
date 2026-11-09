@@ -59,7 +59,6 @@ CSV_DIR = os.path.join(ROOT, "data", "pbip")
 
 # 全局结果列表
 FAILS = []
-WARNS = []
 
 
 # ------------------------------------------------------------------
@@ -72,11 +71,6 @@ def ok(msg):
 def bad(msg):
     print(f"  [FAIL] {msg}")
     FAILS.append(msg)
-
-
-def warn(msg):
-    print(f"  [WARN] {msg}")
-    WARNS.append(msg)
 
 
 def strip_brackets(s):
@@ -446,8 +440,6 @@ def main():
             print(f"  · {f}")
         return 1
     print("PASS  全部通过")
-    if WARNS:
-        print(f"（另有 {len(WARNS)} 条警告）")
     print("=" * 66)
     return 0
 

@@ -36,7 +36,6 @@ Run:
 import json
 import os
 import shutil
-import uuid
 
 import pandas as pd
 
@@ -463,35 +462,6 @@ def textbox(name, x, y, w, h, main, sub=""):
     }
 
 
-def note(name, x, y, w, h, lines):
-    """生成小字说明块。lines = [(文本, 字号pt, 是否加粗, 颜色)]。"""
-    paras = []
-    for text, size, bold, color in lines:
-        style = {
-            "fontFamily": "'Segoe UI','Microsoft YaHei',sans-serif",
-            "fontSize": f"{size}pt",
-            "color": {"solid": {"color": {
-                "expr": {"Literal": {"Value": f"'{color}'"}}}}},
-        }
-        if bold:
-            style["bold"] = True
-        paras.append({
-            "textRuns": [{"value": text, "textStyle": style}],
-            "alignment": "left",
-        })
-
-    return {
-        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-        "name": name,
-        "position": {"x": x, "y": y, "z": 0, "width": w, "height": h, "tabOrder": 0},
-        "visual": {
-            "visualType": "textbox",
-            "query": {"queryState": {}, "sortDefinition": {"sort": []}},
-            "objects": {"general": [{"properties": {"paragraphs": paras}}]},
-            "visualContainerObjects": _container("#FFFFFF", PANEL_BD),
-            "drillFilterOtherVisuals": True,
-        },
-    }
 
 
 def _ref_base(item, fallback):
